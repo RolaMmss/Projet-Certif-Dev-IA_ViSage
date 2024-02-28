@@ -73,7 +73,7 @@ def login_user(request):
             if user is not None:
                 login(request, user)
                 message = f'Bonjour, {user.username}! Vous êtes connecté.'
-                return redirect('homepage')
+                return redirect('home')
             else:
                 message = 'Identifiants invalides.'
     return render(request, 'myapp/login.html', context={'form': form,'message':message})
@@ -90,7 +90,7 @@ def logout_user(request):
     return redirect('login')
 ############################################################################
 # Décorateur pour exiger l'authentification de l'utilisateur
-@login_required
+# @login_required
 def api(request):
     # Affichage des identifiants du client dans la console (à des fins de débogage)
     print(CLIENT_ID)
@@ -123,7 +123,7 @@ def api(request):
             # Rendu de la page avec les résultats
             return render(
                 request,
-                'api_app/reponse_formulaire.html',
+                'myapp/reponse_formulaire.html',
                 context={'form': form, 'info': info, 'nombre_personne': len(info), 'url': form.cleaned_data['url']}
             )
 
@@ -132,4 +132,4 @@ def api(request):
         form = forms.ApiForm()
 
     # Rendu de la page avec le formulaire
-    return render(request, 'api_app/formulaire.html', context={'form': form})
+    return render(request, 'myapp/formulaire.html', context={'form': form})
