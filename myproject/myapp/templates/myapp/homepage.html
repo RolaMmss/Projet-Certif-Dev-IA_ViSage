@@ -1,22 +1,62 @@
-{% extends 'myapp/base.html' %}
 
+{% extends 'myapp/base.html' %}
+{% comment %}
 {% block content %}
 
 <style>
   .resized-figure img {
     width: 300px; 
     height: 200px;  
-    {% comment %} /* You can also use 'max-width' and 'max-height' for responsive resizing */ {% endcomment %}
-    {% comment %} max-width: 50%;
-    max-height: 50%;
-    */ {% endcomment %}
+
   }
 </style>
 
   <h2>Welcome to the Homepage</h2>
   <p>This is the homepage of your application.</p>
   <p>Feel free to customize this template based on your project's requirements.</p>
-  {% comment %} <figure class="resized-figure">
-    <img src="static/logo_slogan.png">
-  </figure>  {% endcomment %}
+
 {% endblock %}
+{% endcomment %}
+
+
+
+{% block content %}
+<main>
+    <div class="container py-4">
+ 
+      <div class="p-5 mb-4 bg-light rounded-3">
+        <div class="container-fluid py-5">
+          <h1 class="display-5 fw-bold">VisAge</h1>
+          <p class="col-md-8 fs-4">Vous voulez en connaitre plus sur vos images? Vous êtes au bon endroit! </p>
+            {% comment %} VisAge vous le permet de compter le nombre de personne ainsi que leur âge.   </p> {% endcomment %}
+          {% comment %} <button class="btn btn-primary btn-lg" type="button">Lancez-vous!</button> {% endcomment %}
+        
+        </div>
+      </div>
+  
+      <div class="row align-items-md-stretch">
+        <div class="col-md-6">
+          <div class="h-100 p-5 text-bg-dark rounded-3">
+            <h2>La magie de l'IA</h2>
+            <p>VisAge utilise toute la puissance de l'IA pour compter le nombre de personne ainsi que leur âge. </p>
+
+          </div>
+        </div>
+        
+        <div class="col-md-6">
+          {% comment %} <div class="h-100 p-5 bg-light border rounded-3 "> {% endcomment %}
+          
+            <button <a href="{% url 'api' %}" class="btn btn-primary btn-lg" onclick="location.href='api'"  type="button">Lancez-vous!</button>
+
+            {% comment %} <button class="btn btn-primary btn-lg " type="button">En savoir plus</button> {% endcomment %}
+            
+          {% comment %} </div> {% endcomment %}
+        </div>
+      </div>
+    </div>
+  </main>
+  
+  
+      
+    </body>
+{% endblock content %}
