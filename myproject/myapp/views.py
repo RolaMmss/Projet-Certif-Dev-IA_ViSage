@@ -1,12 +1,26 @@
+# Importation des modules Django nécessaires
 from django.shortcuts import render
 from django.http import HttpResponse
-# Create your views here.
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
 from .forms import SignupForm,LoginForm
+from . import forms
+import json
+from dotenv import load_dotenv
+import os
+import requests
+from django.contrib.auth.decorators import login_required
 
+#########################################################
+# Chargement des variables d'environnement depuis le fichier .env
+load_dotenv()
 
+# Récupération des identifiants du client à partir des variables d'environnement
+CLIENT_ID = os.getenv('CLIENT_ID')
+CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+
+#########################################################
 def hello(request):
 
     return HttpResponse(f"""
@@ -75,3 +89,47 @@ def logout_user(request):
     logout(request)
     return redirect('login')
 ############################################################################
+# Décorateur pour exiger l'authentification de l'utilisateur
+@login_required
+def api(request):
+    # Affichage des identifiants du client dans la console (à des fins de débogage)
+    print(CLIENT_ID)
+    print(CLIENT_SECRET)
+
+    # URL de l'API à interroger
+    url_api = "https://api.everypixel.com/v1/faces"
+
+    # Vérification du type de requête HTTP
+    if request.method == "POST":
+        # Initialisation du formulaire avec les données de la requête POST
+        form = forms.ApiForm(request.POST)
+        if form.is_valid():
+            # Affichage des données nettoyées du formulaire (à des fins de débogage)
+            print(form.cleaned_data)
+
+            # Envoi de la requête à l'API en utilisant les identifiants du client
+            response = requests.get(url_api, params=form.cleaned_data, auth=(CLIENT_ID, CLIENT_SECRET))
+            
+            # Sauvegarde du formulaire après la requête
+            form.save()
+
+            # Utilisation de .get() pour éviter une KeyError si la clé 'faces' n'est pas présente
+            info = json.loads(response.text).get("faces", [])
+
+            # Affichage des informations récupérées (à des fins de débogage)
+            print(info)
+            print(form.cleaned_data)
+
+            # Rendu de la page avec les résultats
+            return render(
+                request,
+                'api_app/reponse_formulaire.html',
+                context={'form': form, 'info': info, 'nombre_personne': len(info), 'url': form.cleaned_data['url']}
+            )
+
+    else:
+        # Initialisation d'un formulaire vide en cas de requête GET
+        form = forms.ApiForm()
+
+    # Rendu de la page avec le formulaire
+    return render(request, 'api_app/formulaire.html', context={'form': form})
