@@ -27,7 +27,7 @@ def hello(request):
         <h1>Hello Django from container!</h1>
 """)
 
-
+@login_required
 def homepage(request):
     return render(request, 'myapp/homepage.html')
 
