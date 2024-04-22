@@ -24,7 +24,7 @@ CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 def hello(request):
 
     return HttpResponse(f"""
-        <h1>Hello Django from container!</h1>
+        <h1>Hello Rola !</h1>
 """)
 
 @login_required
@@ -75,7 +75,9 @@ def login_user(request):
                 message = f'Bonjour, {user.username}! Vous êtes connecté.'
                 return redirect('home')
             else:
-                message = 'Identifiants invalides.'
+                # message = 'Identifiants invalides.'
+                # Add an error message to the form
+                form.add_error(None, 'Identifiants invalides.')
     return render(request, 'myapp/login.html', context={'form': form,'message':message})
 #########################################################################""
 def logout_user(request):
@@ -90,7 +92,7 @@ def logout_user(request):
     return redirect('login')
 ############################################################################
 # Décorateur pour exiger l'authentification de l'utilisateur
-# @login_required
+@login_required
 def api(request):
     # Affichage des identifiants du client dans la console (à des fins de débogage)
     print(CLIENT_ID)
@@ -133,3 +135,4 @@ def api(request):
 
     # Rendu de la page avec le formulaire
     return render(request, 'myapp/formulaire.html', context={'form': form})
+
