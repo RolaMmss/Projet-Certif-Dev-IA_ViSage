@@ -88,6 +88,7 @@ def logout_user(request):
     Returns:
         A redirect response to the login page.
     """
+    
     logout(request)
     return redirect('login')
 ############################################################################
