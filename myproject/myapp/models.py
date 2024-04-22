@@ -7,5 +7,4 @@ class ApiModel(models.Model):
         max_length=100,
         blank=False,
         null=True,
-        
     )
