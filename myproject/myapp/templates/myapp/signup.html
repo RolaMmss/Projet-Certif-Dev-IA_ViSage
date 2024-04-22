@@ -58,24 +58,4 @@
     </div>
   </section>
 
-
-
-
 {% endblock content %}
-
-
-
-
-
-
-{% comment %} {% extends 'myapp/base.html' %}
-
-{% block content %}
-  <h2>Sign Up</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign Up</button>
-  </form>
-  <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
-{% endblock %} {% endcomment %}
