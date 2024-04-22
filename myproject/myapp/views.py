@@ -24,7 +24,7 @@ CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 def hello(request):
 
     return HttpResponse(f"""
-        <h1>Hello Rola !</h1>
+        <h1>Hello Rola!</h1>
 """)
 
 @login_required
