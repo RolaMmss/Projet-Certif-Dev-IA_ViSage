@@ -5,8 +5,8 @@ from django.contrib import admin
 from .models import ImagePrediction
 
 
-# # Add the model to the admin interface to view and manage the records.
-# @admin.register(ImagePrediction)
-# class ImagePredictionAdmin(admin.ModelAdmin):
-#     list_display = ('image_url', 'timestamp')
-#     readonly_fields = ('timestamp',)
+# Add the model to the admin interface to view and manage the records.
+@admin.register(ImagePrediction)
+class ImagePredictionAdmin(admin.ModelAdmin):
+    list_display = ('image_url', 'timestamp')
+    readonly_fields = ('timestamp',)

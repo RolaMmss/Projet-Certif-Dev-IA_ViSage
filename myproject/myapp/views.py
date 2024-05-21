@@ -4,13 +4,17 @@ from django.http import HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.shortcuts import render, redirect
-from .forms import SignupForm,LoginForm
+from .forms import SignupForm,LoginForm, ApiForm
 from . import forms
 import json
 from dotenv import load_dotenv
 import os
 import requests
 from django.contrib.auth.decorators import login_required
+from .models import ImagePrediction
+from django.http import JsonResponse
+import logging
+from django.utils import timezone
 
 #########################################################
 # Chargement des variables d'environnement depuis le fichier .env
@@ -93,47 +97,96 @@ def logout_user(request):
     return redirect('login')
 ############################################################################
 # Décorateur pour exiger l'authentification de l'utilisateur
+# @login_required
+# def api(request):
+#     # Affichage des identifiants du client dans la console (à des fins de débogage)
+#     print(CLIENT_ID)
+#     print(CLIENT_SECRET)
+
+#     # URL de l'API à interroger
+#     url_api = "https://api.everypixel.com/v1/faces"
+
+#     # Vérification du type de requête HTTP
+#     if request.method == "POST":
+#         # Initialisation du formulaire avec les données de la requête POST
+#         form = forms.ApiForm(request.POST)
+#         if form.is_valid():
+#             # Affichage des données nettoyées du formulaire (à des fins de débogage)
+#             print(form.cleaned_data)
+
+#             # Envoi de la requête à l'API en utilisant les identifiants du client
+#             response = requests.get(url_api, params=form.cleaned_data, auth=(CLIENT_ID, CLIENT_SECRET))
+            
+#             # Sauvegarde du formulaire après la requête
+#             form.save()
+
+#             # Utilisation de .get() pour éviter une KeyError si la clé 'faces' n'est pas présente
+#             info = json.loads(response.text).get("faces", [])
+
+#             # Affichage des informations récupérées (à des fins de débogage)
+#             print(info)
+#             print(form.cleaned_data)
+
+#             # Rendu de la page avec les résultats
+#             return render(
+#                 request,
+#                 'myapp/reponse_formulaire.html',
+#                 context={'form': form, 'info': info, 'nombre_personne': len(info), 'url': form.cleaned_data['url']}
+#             )
+
+#     else:
+#         # Initialisation d'un formulaire vide en cas de requête GET
+#         form = forms.ApiForm()
+
+#     # Rendu de la page avec le formulaire
+#     return render(request, 'myapp/formulaire.html', context={'form': form})
+
+
+# Modify the api view to save predictions to the database.
+
+
+logger = logging.getLogger(__name__)
+
 @login_required
 def api(request):
-    # Affichage des identifiants du client dans la console (à des fins de débogage)
-    print(CLIENT_ID)
-    print(CLIENT_SECRET)
-
-    # URL de l'API à interroger
     url_api = "https://api.everypixel.com/v1/faces"
 
-    # Vérification du type de requête HTTP
-    if request.method == "POST":
-        # Initialisation du formulaire avec les données de la requête POST
-        form = forms.ApiForm(request.POST)
+    if request.method == 'POST':
+        form = ApiForm(request.POST)
         if form.is_valid():
-            # Affichage des données nettoyées du formulaire (à des fins de débogage)
-            print(form.cleaned_data)
+            image_url = form.cleaned_data['image_url']
+            response = requests.get(url_api, params={'url': image_url}, auth=(CLIENT_ID, CLIENT_SECRET))
+            # Log the response content
+            print(response.content)
+            prediction_data = json.loads(response.text).get('faces', [])
 
-            # Envoi de la requête à l'API en utilisant les identifiants du client
-            response = requests.get(url_api, params=form.cleaned_data, auth=(CLIENT_ID, CLIENT_SECRET))
-            
-            # Sauvegarde du formulaire après la requête
-            form.save()
+            # Save prediction data to the database
+            prediction_instance = ImagePrediction.objects.create(image_url=image_url, prediction_data=prediction_data)
 
-            # Utilisation de .get() pour éviter une KeyError si la clé 'faces' n'est pas présente
-            info = json.loads(response.text).get("faces", [])
+            # Convert the timestamp to local time
+            local_time = timezone.localtime(prediction_instance.timestamp)
 
-            # Affichage des informations récupérées (à des fins de débogage)
-            print(info)
-            print(form.cleaned_data)
-
-            # Rendu de la page avec les résultats
             return render(
                 request,
                 'myapp/reponse_formulaire.html',
-                context={'form': form, 'info': info, 'nombre_personne': len(info), 'url': form.cleaned_data['url']}
+                context={'form': form, 'info': prediction_data, 'nombre_personne': len(prediction_data), 'url': image_url, 'timestamp': local_time}
             )
-
     else:
-        # Initialisation d'un formulaire vide en cas de requête GET
-        form = forms.ApiForm()
+        form = ApiForm()
 
-    # Rendu de la page avec le formulaire
     return render(request, 'myapp/formulaire.html', context={'form': form})
 
+# def api(request):
+#     if request.method == 'POST':
+#         # Get the image_url from the POST data
+#         image_url = request.POST.get('image_url')
+        
+#         # Make the API request with the correct parameter name
+#         response = requests.get('https://api.everypixel.com/v1/faces', params={'image_url': image_url}, auth=(CLIENT_ID, CLIENT_SECRET))
+
+#         # Process the response and return it
+#         data = response.json()
+#         return JsonResponse(data)
+#     else:
+#         # Handle other request methods or return an error
+#         return JsonResponse({'error': 'POST method required'})

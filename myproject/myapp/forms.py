@@ -27,11 +27,11 @@ class LoginForm(forms.Form):
 #         }
         
         
-# # Ensure that the ApiForm points to the correct model.
-# class ApiForm(forms.ModelForm):
-#     class Meta:
-#         model = ImagePrediction
-#         fields = ['image_url']
-#         labels = {
-#             'image_url': "Entrez l'URL de votre image",
-#         }
+# Ensure that the ApiForm points to the correct model.
+class ApiForm(forms.ModelForm):
+    class Meta:
+        model = ImagePrediction
+        fields = ['image_url']
+        labels = {
+            'image_url': "Entrez l'URL de votre image",
+        }
