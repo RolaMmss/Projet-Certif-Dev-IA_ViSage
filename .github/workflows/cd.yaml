@@ -1,0 +1,40 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.10
+
+    - name: Install dependencies
+      run: |
+        python -m venv myenv
+        source myenv/bin/activate
+        pip install -r requirements.txt
+
+    - name: Run tests
+      run: |
+        source myenv/bin/activate
+        pytest
+
+    - name: Deploy to Production
+      if: success()
+      run: |
+        source myenv/bin/activate
+        ./deploy_script.sh
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SERVER: ${{ secrets.SERVER }}
+        USER: ${{ secrets.USER }}
