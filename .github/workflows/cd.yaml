@@ -3,38 +3,33 @@ name: CD Pipeline
 on:
   push:
     branches:
-      - develop
+      - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v3
-      with:
-        python-version: 3.10
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
 
-    - name: Install dependencies
-      run: |
-        python -m venv myenv
-        source myenv/bin/activate
-        pip install -r requirements.txt
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Run tests
-      run: |
-        source myenv/bin/activate
-        pytest
+      - name: Build and push Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/myproject:${{ github.sha }} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/myproject:${{ github.sha }}
 
-    - name: Deploy to Production
-      if: success()
-      run: |
-        source myenv/bin/activate
-        ./deploy_script.sh
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-        SERVER: ${{ secrets.SERVER }}
-        USER: ${{ secrets.USER }}
+      - name: Deploy to Azure Container Instances
+        uses: azure/cli@v1
+        with:
+          inlineScript: |
+            az login --service-principal --username ${{ secrets.AZURE_CREDENTIALS }} --password ${{ secrets.AZURE_CREDENTIALS_PASSWORD }} --tenant ${{ secrets.AZURE_TENANT }}
+            az container create --resource-group YOUR_RESOURCE_GROUP --name myproject --image ${{ secrets.DOCKER_USERNAME }}/myproject:${{ github.sha }} --dns-name-label myproject --ports 80
