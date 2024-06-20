@@ -5,7 +5,7 @@ FROM python:3.10-slim
 ENV PYTHONUNBUFFERED 1
 
 # Set the working directory in the container
-WORKDIR /myproject
+WORKDIR /app
 
 # Copy the requirements file into the container at /app
 COPY requirements.txt /myproject/
