@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 
 # Forms Tests:
-#     SignupFormTest, LoginFormTest, and ApiFormTest check the validity of the forms with valid and invalid data.
+# SignupFormTest, LoginFormTest, and ApiFormTest check the validity of the forms with valid and invalid data.
 class SignupFormTest(TestCase):
     def test_signup_form_valid(self):
         form_data = {
