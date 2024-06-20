@@ -31,7 +31,7 @@ python3 manage.py runserver
 Execute create_ACR.sh in the terminal as follows:
     cd to the directory root next to api,model, .env, etc...
     chmod +x scripts/create_ACR.sh
-    .scripts/create_ACR.sh
+    ./scripts//create_ACI.sh
 
         
 
