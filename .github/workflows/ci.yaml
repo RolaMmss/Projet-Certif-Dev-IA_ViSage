@@ -63,8 +63,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
+        pip install -r myproject/requirements.txt  # Adjusted path to requirements.txt in the myproject directory
     - name: Lint code
       run: |
         pip install flake8
@@ -94,8 +93,8 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        chmod +x ./build_webapp_image.sh
-        ./build_webapp_image.sh
+        chmod +x ./scripts/build_webapp_image.sh
+        ./scripts/build_webapp_image.sh
 
   deploy:
     runs-on: ubuntu-latest
@@ -112,5 +111,5 @@ jobs:
 
     - name: Deploy to Azure Container Instances
       run: |
-        chmod +x ./create_ACI.sh
-        ./create_ACI.sh
+        chmod +x ./scripts/create_ACI.sh
+        ./scripts/create_ACI.sh

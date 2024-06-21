@@ -30,9 +30,15 @@ python3 manage.py runserver
 # Create Azure Container Instance
 Execute create_ACR.sh in the terminal as follows:
     cd to the directory root next to api,model, .env, etc...
-    chmod +x scripts/create_ACR.sh
+    chmod +x scripts/create_ACI.sh
     ./scripts//create_ACI.sh
 
 # http://myapp-container.francecentral.azurecontainer.io:8000/
         
 
+# CI/CD with Github Actions
+# Get Azure credentials
+az login
+az ad sp create-for-rbac --name myproject-sp --sdk-auth
+(# Create a service principal
+az ad sp create-for-rbac --name github-actions-aci --role contributor --scopes /subscriptions/YOUR_SUBSCRIPTION_ID/resourceGroups/YOUR_RESOURCE_GROUP --sdk-auth)
