@@ -12,7 +12,7 @@ fi
 # Azure Container Instance (ACI) configuration
 RESOURCE_GROUP="$RESSOURCE_GROUP"  # Ensure this matches your Azure resource group name
 ACI_NAME="myapp-container"         # Name for your ACI
-CONTAINER_IMAGE="$DOCKERHUB_USERNAME/repo_docker:v1"
+CONTAINER_IMAGE="$DOCKERHUB_USERNAME/repo_docker:latest"
 
 # Check if required variables are set
 if [[ -z "${DOCKERHUB_USERNAME}" ]] || [[ -z "${DOCKERHUB_PASSWORD}" ]] || \

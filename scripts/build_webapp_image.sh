@@ -11,8 +11,8 @@ docker run -p 8000:8000 imageweb:latest &
 
 # Tag the image before pushing it to Docker Hub
 docker login -u "$DOCKERHUB_USERNAME" -p "$DOCKERHUB_PASSWORD"
-docker tag imageweb rola123/repo_docker:v1
-docker push rola123/repo_docker:v1
+docker tag imageweb $DOCKERHUB_USERNAME/repo_docker:latest
+docker push $DOCKERHUB_USERNAME/repo_docker:latest
 
 # Run it: chmod +x build_webapp_image.sh
 # Execute it : ./build_webapp_image.sh
