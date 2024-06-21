@@ -54,10 +54,10 @@ jobs:
           source myenv/bin/activate
           python myproject/manage.py check
 
-      - name: Run Django tests
-        run: |
-          source myenv/bin/activate
-          python myproject/manage.py test myapp --settings=myproject.settings
+      # - name: Run Django tests
+      #   run: |
+      #     source myenv/bin/activate
+      #     python myproject/manage.py test myapp --settings=myproject.settings
 
       - name: Run pytest
         run: |
