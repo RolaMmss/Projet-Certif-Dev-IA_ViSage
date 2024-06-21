@@ -5,7 +5,9 @@ on:
     branches:
       - develop
       - main
-
+    paths:
+      - 'myproject/**'  # Adjust the path based on your Django project structure
+      - '.github/workflows/ci.yaml'
 jobs:
   build:
     runs-on: ubuntu-latest
