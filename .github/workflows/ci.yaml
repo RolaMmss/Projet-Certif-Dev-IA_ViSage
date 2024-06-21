@@ -64,7 +64,7 @@ jobs:
           source myenv/bin/activate
           pytest myproject/myapp/tests.py --disable-warnings
 
-
+#  pytest app_web --cov-fail-under=80 -vv
 
 
 # # .github/workflows/integration.yml
