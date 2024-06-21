@@ -1,4 +1,4 @@
-# execute chmod +x build_app_web_image.sh before
+# build_webapp_image.sh
 
 set -o allexport
 source .env

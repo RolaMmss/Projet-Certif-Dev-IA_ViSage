@@ -1,42 +1,5 @@
-# set -o allexport
-# # Load environment variables from .env file
-# source .env   
-# set +o allexport
-
-# # Login to Docker Hub
-# echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-
-
-# # # Login to Azure
-# # az login
-
-# az container create \
-#             --resource-group $RESSOURCE_GROUP \
-#             --name ACI_Web --image $DOCKERHUB_USERNAME/repo_docker:v1 --cpu 1 \
-#             --memory 1 \
-#             --ip-address public \
-#             --ports 80 8000 \
-#             --environment-variables \
-#                 DOCKERHUB_USERNAME="$DOCKERHUB_USERNAME" \ 
-#                 DOCKERHUB_PASSWORD="$DOCKERHUB_PASSWORD" \
-#                 SUBSCRIPTION_ID="$SUBSCRIPTION_ID" \
-#                 RESSOURCE_GROUP="$RESSOURCE_GROUP" \
-#               # "WORKSPACE_NAME"=$WORKSPACE_NAME \
-#               # "SERVER"=$SERVER \
-#               # "DATABASE"=$DATABASE \
-#               # "POSTGRES_USER"=$POSTGRES_USER \
-#               # "PASSWORD"=$PASSWORD \
-#               # "SECRET_KEY"=$SECRET_KEY
-
-# # Run :  chmod +x create_ACI.sh
-# # Execute : ./create_ACI.sh
-
-
-
-
-
-
 #!/bin/bash
+# create_ACI.sh
 
 # Load environment variables from .env file
 if [ -f .env ]; then
@@ -77,3 +40,5 @@ az container create \
     --restart-policy OnFailure \
     --dns-name-label "$ACI_NAME" \
     --output json
+
+echo "ACI deployment created successfully."

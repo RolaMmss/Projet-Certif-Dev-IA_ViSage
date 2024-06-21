@@ -33,5 +33,6 @@ Execute create_ACR.sh in the terminal as follows:
     chmod +x scripts/create_ACR.sh
     ./scripts//create_ACI.sh
 
+# http://myapp-container.francecentral.azurecontainer.io:8000/
         
 
