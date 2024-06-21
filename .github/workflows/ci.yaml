@@ -62,7 +62,7 @@ jobs:
       - name: Run pytest
         run: |
           source myenv/bin/activate
-          pytest myproject/myapp/tests.py --disable-warnings
+          pytest myproject/myapp/tests.py 
 
 #  pytest app_web --cov-fail-under=80 -vv
 
