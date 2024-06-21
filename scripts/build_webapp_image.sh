@@ -16,3 +16,7 @@ docker push rola123/repo_docker:v1
 
 # Run it: chmod +x build_webapp_image.sh
 # Execute it : ./build_webapp_image.sh
+
+
+
+# remark to be deleted
