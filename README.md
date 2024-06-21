@@ -11,7 +11,7 @@ pip install -r requirements.txt
 # Run the pytests : 
 pytest myapp/tests.py
 
-<!-- PYTHONPATH=./ pytest myapp/tests/          ( in case it didn't find api, this will lead to the correct path) -->
+<!-- PYTHONPATH=./ pytest myapp/tests.py         ( in case it didn't find api, this will lead to the correct path) -->
 
 # Launch the web app
 python3 manage.py runserver

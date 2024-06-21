@@ -39,7 +39,7 @@ jobs:
       - name: Run tests
         run: |
           source myenv/bin/activate
-          PYTHONPATH=./ pytest myapp/tests/  
+          PYTHONPATH=./ pytest myapp/tests.py 
 
 
 
