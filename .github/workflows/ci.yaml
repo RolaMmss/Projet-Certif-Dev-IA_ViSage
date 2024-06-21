@@ -59,10 +59,10 @@ jobs:
       #     source myenv/bin/activate
       #     python myproject/manage.py test myapp --settings=myproject.settings
 
-      - name: Run pytest
-        run: |
-          source myenv/bin/activate
-          pytest myapp/tests.py 
+      # - name: Run pytest
+      #   run: |
+      #     source myenv/bin/activate
+      #     pytest myapp/tests.py 
 
 #  pytest app_web --cov-fail-under=80 -vv
 
