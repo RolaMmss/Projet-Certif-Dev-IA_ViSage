@@ -102,7 +102,7 @@ jobs:
 
       - name: Run tests
         run: |
-          python myproject/manage.py test
+          python3 myproject/manage.py test
 
 #---------------------------------------------
 
