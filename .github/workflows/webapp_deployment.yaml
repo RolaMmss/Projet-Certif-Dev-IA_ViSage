@@ -19,9 +19,9 @@ jobs:
 
     - name: Build and Push Docker Image
       run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/dockerimage:latest  -f api/Dockerfile .
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/imageweb:latest  -f Dockerfile .
         echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/dockerimage:latest
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/imageweb:latest
 
     - name: Azure Login
       uses: azure/login@v1
@@ -36,11 +36,11 @@ jobs:
           az account set --subscription ${{ secrets.SUBSCRIPTION_ID }}
           
           # Check if the container exists
-          container_exists=$(az container show --resource-group ${{ secrets.RESSOURCE_GROUP }} --name containerinstanceapi --query "name" -o tsv || echo "notfound")
+          container_exists=$(az container show --resource-group ${{ secrets.RESSOURCE_GROUP }} --name containerinstancewebapp --query "name" -o tsv || echo "notfound")
       
           if [ "$container_exists" != "notfound" ]; then
             echo "Container instance exists. Deleting..."
-            az container delete --resource-group ${{ secrets.RESSOURCE_GROUP }} --name containerinstanceapi --yes
+            az container delete --resource-group ${{ secrets.RESSOURCE_GROUP }} --name containerinstancewebapp --yes
             echo "Container instance deleted."
           else
             echo "Container instance does not exist."
@@ -48,18 +48,18 @@ jobs:
       
           az container create \
                 --resource-group ${{ secrets.RESSOURCE_GROUP }} \
-                --name containerinstanceapi \
-                --image ${{ secrets.DOCKERHUB_USERNAME }}/repo_docker:latest \
+                --name containerinstancewebapp \
+                --image ${{ secrets.DOCKERHUB_USERNAME }}/repo_webapp:latest \
                 --cpu 1 \
                 --memory 1 \
                 --ip-address public \
-                --dns-name-label containerinstanceapi \
+                --dns-name-label containerinstancewebapp \
                 --ports 80 8000 \
                 --registry-username ${{ secrets.DOCKERHUB_USERNAME }} \
                 --registry-password ${{ secrets.DOCKERHUB_PASSWORD }}
 
     - name: Test Endpoint
-      run: curl -I containerinstanceapi.francecentral.azurecontainer.io:8000/docs
+      run: curl -I containerinstancewebapp.francecentral.azurecontainer.io:8000/docs
       # jhb
 
 
