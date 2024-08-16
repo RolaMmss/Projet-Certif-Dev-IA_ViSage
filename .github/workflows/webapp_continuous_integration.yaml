@@ -2,10 +2,10 @@ name: CI Pipeline
 
 on:
   push:
-    branches:
-      - 'test-ci/**'
-      - 'develop'
-      - 'main' # to remove after testing
+    # branches:
+    #   - 'test-ci/**'
+    #   - 'develop'
+    #   - 'main' # to remove after testing
     paths:
       - 'myproject/**'  # Adjust the path based on your Django project structure
       - '.github/workflows/webapp_continuous_integration.yaml'
