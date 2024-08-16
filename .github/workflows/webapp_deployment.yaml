@@ -60,7 +60,6 @@ jobs:
 
     - name: Test Endpoint
       run: curl -I containerinstancewebapp.francecentral.azurecontainer.io:8000/docs
-      # jhb
 
 
 
