@@ -117,7 +117,8 @@ on:
     #   - test-ci
     paths:
         - 'myproject/**'  # Adjust the path based on your Django project structure
-        - '.github/workflows/webapp_continuous_deployment.yaml'
+        - '.github/workflows/webapp_continuous_integration.yaml'
+
   pull_request:
       types: [opened, synchronize, reopened]
       branches:
@@ -126,6 +127,7 @@ on:
       paths:
         - 'myproject/**'  # Adjust the path based on your Django project structure
         - '.github/workflows/webapp_continuous_integration.yaml'
+
   workflow_call:
 
 jobs:
