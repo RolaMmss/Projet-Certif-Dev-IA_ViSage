@@ -162,5 +162,5 @@ jobs:
 
       - name: Run tests
         run: |
-          run: pytest myproject --cov-fail-under=80 -vv
+          run: PYTHONPATH=./ pytest myproject/tests/ --cov-fail-under=80 -vv
 
