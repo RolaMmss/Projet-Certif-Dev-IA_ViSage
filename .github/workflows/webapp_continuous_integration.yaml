@@ -164,4 +164,5 @@ jobs:
       - name: Run tests
         run: |
           source myenv/bin/activate
-          PYTHONPATH=./ pytest myproject
+          cd myproject
+          PYTHONPATH=./ pytest
