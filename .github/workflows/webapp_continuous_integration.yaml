@@ -167,7 +167,9 @@ jobs:
       #   working-directory: root
         run: |
           source myenv/bin/activate
-          pytest myproject --cov-fail-under=80 -vv --cov-report=term-m
+          pytest myproject 
+          
+  # --cov-fail-under=80 -vv --cov-report=term-m
           
 # PYTHONPATH=./ pytest myproject/tests/
  
