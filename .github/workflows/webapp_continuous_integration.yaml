@@ -98,11 +98,11 @@ jobs:
       - name: Install dependencies
         run: |
           python3 -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r myproject/requirements.txt
 
       - name: Run tests
         run: |
-          python manage.py test
+          python myproject/manage.py test
 
 #---------------------------------------------
 
