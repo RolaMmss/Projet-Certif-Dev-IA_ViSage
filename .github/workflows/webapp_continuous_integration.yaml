@@ -162,7 +162,7 @@ jobs:
           pip install -r myproject/requirements.txt
 
       - name: Run tests
-      #   working-directory: ./myproject
+      #   working-directory: ./scripts
         run: |
           source myenv/bin/activate
           pytest myproject --cov-fail-under=80 -vv 
