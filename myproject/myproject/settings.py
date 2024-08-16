@@ -144,6 +144,8 @@ LOGIN_REDIRECT_URL = '/'
 # # URL to redirect to when login is required
 LOGIN_URL = '/login/'
 
+FORMS_URLFIELD_ASSUME_HTTPS = True
+
 
 # # # Monitoring
 
