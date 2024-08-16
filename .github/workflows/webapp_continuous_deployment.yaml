@@ -1,0 +1,78 @@
+# name: CD Pipeline
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v1
+
+#       - name: Log in to Docker Hub
+#         uses: docker/login-action@v2
+#         with:
+#           username: ${{ secrets.DOCKER_USERNAME }}
+#           password: ${{ secrets.DOCKER_PASSWORD }}
+
+#       - name: Build and push Docker image
+#         run: |
+#           docker build -t ${{ secrets.DOCKER_USERNAME }}/myproject:${{ github.sha }} .
+#           docker push ${{ secrets.DOCKER_USERNAME }}/myproject:${{ github.sha }}
+
+#       - name: Deploy to Azure Container Instances
+#         uses: azure/cli@v1
+#         with:
+#           inlineScript: |
+#             az login --service-principal --username ${{ secrets.AZURE_CREDENTIALS }} --password ${{ secrets.AZURE_CREDENTIALS_PASSWORD }} --tenant ${{ secrets.AZURE_TENANT }}
+#             az container create --resource-group YOUR_RESOURCE_GROUP --name myproject --image ${{ secrets.DOCKER_USERNAME }}/myproject:${{ github.sha }} --dns-name-label myproject --ports 80
+
+
+
+
+
+
+
+
+
+
+# .github/workflows/deployment.yml
+
+name: Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up .env file
+        run: |
+          echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
+          echo "DOCKERHUB_PASSWORD=${{ secrets.DOCKERHUB_PASSWORD }}" >> .env
+          echo "SUBSCRIPTION_ID=${{ secrets.SUBSCRIPTION_ID }}" >> .env
+          echo "RESSOURCE_GROUP=${{ secrets.RESOURCE_GROUP }}" >> .env
+
+      - name: Login to Azure CLI
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure Container Instances (ACI)
+        run: |
+          chmod +x scripts/create_ACI.sh
+          ./scripts/create_ACI.sh
