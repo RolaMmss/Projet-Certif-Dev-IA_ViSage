@@ -22,16 +22,22 @@ python3 manage.py runserver
         - docker run -p 8000:8000 imageweb:latest
         - then /docs
         Remark: Each time you build a new image, you have to go to Docker extension in vscode to delete the existant containers.
+- Test docker run with environment variables locally:
+docker run -p 8000:8000 \
+    -e CLIENT_ID=WGY8DrcNMzq6vr4JYFoGioeB \
+    -e CLIENT_SECRET=3qxldq8wTZhVdAxGtnvJpf1fKJNEHbZty9dTWACnehhAw10B \
+    imageweb:latest
+
 - Tag the image before pushing it to dockerhub
         - docker login
-        - docker tag imageweb rola123/repo_docker:v1
-        - docker push rola123/repo_docker:v1
+        - docker tag imageweb rola123/repo_webapp:latest
+        - docker push rola123/repo_webapp:latest
 
 # Create Azure Container Instance
-Execute create_ACR.sh in the terminal as follows:
+Execute create_ACI.sh in the terminal as follows:
     cd to the directory root next to api,model, .env, etc...
-    chmod +x scripts/create_ACR.sh
-    ./scripts//create_ACI.sh
+    chmod +x scripts/create_ACI.sh
+    ./scripts/create_ACI.sh
 
 # http://myapp-container.francecentral.azurecontainer.io:8000/
         

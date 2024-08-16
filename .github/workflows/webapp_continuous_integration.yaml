@@ -5,6 +5,7 @@ on:
     branches:
       - develop
       - main
+      - test-ci
     paths:
       - 'myproject/**'  # Adjust the path based on your Django project structure
       - '.github/workflows/ci.yaml'
