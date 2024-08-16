@@ -165,4 +165,5 @@ jobs:
         run: |
           source myenv/bin/activate
           cd myproject
-          PYTHONPATH=./ pytest
+          # PYTHONPATH=./ pytest
+          pytest myproject --cov-fail-under=80 -vv
