@@ -9,7 +9,9 @@ source myenv/bin/activate
 pip install -r requirements.txt
 
 # Run the pytests : 
-pytest myapp/tests.py
+
+Change directory to myproject
+pytest tests/test_views.py
 
 <!-- PYTHONPATH=./ pytest myapp/tests.py         ( in case it didn't find api, this will lead to the correct path) -->
 

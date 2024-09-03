@@ -146,6 +146,10 @@ from myapp.models import ImagePrediction
 from myapp.forms import SignupForm, LoginForm, ApiForm
 from unittest.mock import patch
 
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'myproject.settings')
+
+
 # Fixtures for setting up the client and user
 @pytest.fixture
 def client():
