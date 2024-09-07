@@ -1,5 +1,8 @@
 # Projet-Certif-Dev-IA_ViSage
-Projet d'Intelligence Artificielle - Mise en Service, Développement d'Application et Débogage
+Projet d'Intelligence Artificielle - Mise en Service, Développement d'Application et Débogage.
+
+Develop a web app that integrates an artificial intelligence model, monitor this model, program automated tests, and create a continuous delivery pipeline for this AI model in an MLOps approach to automate the steps of validation, testing, packaging, and deployment of the app.
+
 
 # Create and activate a virtual environment
 python3 -m venv myenv
