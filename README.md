@@ -33,6 +33,8 @@ docker run -p 8000:8000 \
     -e CLIENT_SECRET=3qxldq8wTZhVdAxGtnvJpf1fKJNEHbZty9dTWACnehhAw10B \
     imageweb:latest
 
+docker run -p 8000:8000 -e "APPLICATIONINSIGHTS_CONNECTION_STRING=InstrumentationKey=25155d74-cfca-43aa-b788-aa2ca8de59d7;IngestionEndpoint=https://francecentral-1.in.applicationinsights.azure.com/;LiveEndpoint=https://francecentral.livediagnostics.monitor.azure.com/;ApplicationId=2e13bbed-3d25-4592-ab6c-1558e02b2ca8" imageweb:latest
+
 - Tag the image before pushing it to dockerhub
         - docker login
         - docker tag imageweb rola123/repo_webapp:latest

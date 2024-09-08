@@ -14,8 +14,8 @@ from .models import ImagePrediction
 from django.http import JsonResponse
 import logging
 from django.utils import timezone
-
 from myproject.opentelemetry_setup import prediction_counter_per_minute, logger, tracer
+
 #########################################################
 # Chargement des variables d'environnement depuis le fichier .env
 load_dotenv()
@@ -23,8 +23,9 @@ load_dotenv()
 # Récupération des identifiants du client à partir des variables d'environnement
 CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
-url_api = "https://api.everypixel.com/v1/faces"
+url_api = os.getenv('URL_API')
 
+logger = logging.getLogger(__name__)
 #########################################################
 def hello(request):
 
@@ -52,6 +53,7 @@ def signup(request):
             user = form.save()
             # auto-login user
             login(request, user)
+            logger.info(f"User {user.username} signed up and logged in")
             return redirect('login')
     return render(request, 'myapp/signup.html', context={'form': form})
 #####################################################################
@@ -77,9 +79,11 @@ def login_user(request):
             )
             if user is not None:
                 login(request, user)
+                logger.info(f"User {user.username} logged in")
                 message = f'Bonjour, {user.username}! Vous êtes connecté.'
                 return redirect('home')
             else:
+                logger.warning("Invalid login attempt")
                 # message = 'Identifiants invalides.'
                 # Add an error message to the form
                 form.add_error(None, 'Identifiants invalides.')
@@ -93,12 +97,10 @@ def logout_user(request):
     Returns:
         A redirect response to the login page.
     """
-    
+    logger.info("User logged out")
     logout(request)
     return redirect('login')
 ############################################################################
-
-logger = logging.getLogger(__name__)
 
 # # Décorateur pour exiger l'authentification de l'utilisateur
 # @login_required
