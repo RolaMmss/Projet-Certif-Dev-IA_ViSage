@@ -1,0 +1,61 @@
+{% extends 'myapp/base.html' %}
+{% load widget_tweaks %}
+
+
+{% block content %}
+
+<section class="vh-100">
+  <div class="container-fluid h-custom">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+        <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Create Account</p>
+          <form method="post" action="{% url 'signup' %}">         
+            {% csrf_token %}
+            {% comment %} <div class="form-outline mb-4">
+                <label class="form-label" for="{{form.username.id_for_label}}">Username</label>
+                {{ form.username|add_class:"form-control form-control-lg" }} 
+            </div> {% endcomment %}
+                
+                {% comment %} <div class="d-flex flex-row align-items-center mb-4"> {% endcomment %}
+                  {% comment %} <i class="bi bi-person-fill"></i> {% endcomment %}
+            <div class="form-outline mb-4">
+              <i class="bi bi-person-fill"></i>
+              <label class="form-label" for="{{form.username.id_for_label}}">Username</label>
+              {{ form.username|add_class:"form-control form-control-lg" }}    
+              {{ form.username.help_text }}    
+
+            </div>
+                {% comment %} </div> {% endcomment %}
+
+            
+
+            <!-- Password input -->
+            <div class="form-outline mb-3">
+              <label class="form-label" for="{{form.password1.id_for_label}}">Password</label>
+              {{ form.password1|add_class:"form-control form-control-lg" }}    
+              {{ form.password1.help_text }}      
+  
+            </div> 
+            <!-- Password confirmation -->
+
+            <div class="form-outline mb-2">
+              <label class="form-label" for="{{form.password2.id_for_label}}">Password confirmation</label>
+              {{ form.password2|add_class:"form-control form-control-lg" }}      
+
+            </div> 
+
+            <button type="submit" class="btn btn-primary">Signup</button>
+          </form>
+          </div>
+
+          <div class="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+              class="img-fluid" alt="Sample image">
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock content %}

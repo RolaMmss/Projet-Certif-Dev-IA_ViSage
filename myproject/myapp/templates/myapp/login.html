@@ -1,0 +1,78 @@
+
+
+
+
+{% extends "myapp/base.html" %}
+{% load widget_tweaks %}
+
+
+{% block content %}
+
+<section class="vh-100">
+    <div class="container-fluid h-custom">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-md-9 col-lg-6 col-xl-5">
+            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                class="img-fluid" alt="Sample image">
+            </div>
+            <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+
+                 <form method="post"> {% comment %}action="{% url 'login' %}">          {% endcomment %}
+
+                    {% csrf_token %}
+
+                    {% if next %}
+                        {% if user.is_authenticated %}
+                        <p class="text-danger">Your account doesn't have access to this page. To proceed,
+                        please login with an account that has access.</p>
+                        {% else %}
+                        <p class="text-danger">Please login to see this page.</p>
+                        {% endif %}
+                    {% endif %}
+
+
+                    <div class="form-outline mb-4">
+                        <label class="form-label" for="{{form.username.id_for_label}}">Username</label>
+                        {{ form.username|add_class:"form-control form-control-lg" }}      
+
+                    </div>
+
+                    <!-- Password input -->
+
+                    <div class="form-outline mb-3">
+                        <label class="form-label" for="{{form.password.id_for_label}}">Password</label>
+                        {{ form.password|add_class:"form-control form-control-lg" }}      
+
+                    </div>                               
+                   
+
+                    {% if form.errors %}
+                    <p class="text-danger">Your username and password didn't match. Please try again.</p>
+                    {% endif %}
+
+                    <div class="text-center text-lg-start mt-4 pt-2">
+                        <input type="submit" value="Sign in"  class="btn btn-primary btn-lg"
+                        style="padding-left: 2.5rem; padding-right: 2.5rem;" >
+                        <input type="hidden" name="next" value="{{ next }}" >
+                    <p class="small fw-bold mt-2 pt-1 mb-0">You do not have an account yet? <a href="{% url 'signup' %}" 
+                        class="link-danger" target = "_self">Sign up now!</a></p>
+                    </div> 
+                     
+                </form>
+            </div>
+        </div>
+    </div>    
+</section>                  
+{% endblock %} 
+
+
+
+
+
+
+
+
+
+ 
+
+

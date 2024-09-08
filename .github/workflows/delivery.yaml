@@ -1,0 +1,31 @@
+# .github/workflows/delivery.yml
+
+name: Delivery
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Set up .env file
+        run: |
+          echo "DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}" >> .env
+          echo "DOCKERHUB_PASSWORD=${{ secrets.DOCKERHUB_PASSWORD }}" >> .env
+          echo "SUBSCRIPTION_ID=${{ secrets.SUBSCRIPTION_ID }}" >> .env
+          echo "RESSOURCE_GROUP=${{ secrets.RESOURCE_GROUP }}" >> .env
+
+      - name: Build and push Docker image
+        run: |
+          chmod +x scripts/build_webapp_image.sh
+          ./scripts/build_webapp_image.sh
