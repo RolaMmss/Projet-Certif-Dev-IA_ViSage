@@ -1,9 +1,8 @@
 # Importation des modules Django nécessaires
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.shortcuts import render, redirect
 from .forms import SignupForm,LoginForm, ApiForm
 from . import forms
 import json
@@ -16,6 +15,7 @@ from django.http import JsonResponse
 import logging
 from django.utils import timezone
 
+from myproject.opentelemetry_setup import prediction_counter_per_minute, logger, tracer
 #########################################################
 # Chargement des variables d'environnement depuis le fichier .env
 load_dotenv()
@@ -23,6 +23,7 @@ load_dotenv()
 # Récupération des identifiants du client à partir des variables d'environnement
 CLIENT_ID = os.getenv('CLIENT_ID')
 CLIENT_SECRET = os.getenv('CLIENT_SECRET')
+url_api = "https://api.everypixel.com/v1/faces"
 
 #########################################################
 def hello(request):
@@ -99,33 +100,85 @@ def logout_user(request):
 
 logger = logging.getLogger(__name__)
 
-# Décorateur pour exiger l'authentification de l'utilisateur
+# # Décorateur pour exiger l'authentification de l'utilisateur
+# @login_required
+# def api(request):
+    
+
+#     if request.method == 'POST':
+#         form = ApiForm(request.POST)
+#         if form.is_valid():
+#             image_url = form.cleaned_data['image_url']
+#             response = requests.get(url_api, params={'url': image_url}, auth=(CLIENT_ID, CLIENT_SECRET))
+#             # Log the response content
+#             print(response.content)
+#             prediction_data = json.loads(response.text).get('faces', [])
+
+#             # Save prediction data to the database
+#             prediction_instance = ImagePrediction.objects.create(image_url=image_url, prediction_data=prediction_data)
+
+#             # Convert the timestamp to local time
+#             local_time = timezone.localtime(prediction_instance.timestamp)
+
+#             return render(
+#                 request,
+#                 'myapp/reponse_formulaire.html',
+#                 context={'form': form, 'info': prediction_data, 'nombre_personne': len(prediction_data), 'url': image_url, 'timestamp': local_time}
+#             )
+#     else:
+#         form = ApiForm()
+
+#     return render(request, 'myapp/formulaire.html', context={'form': form})
+
+
+
+# API View with OpenTelemetry tracing and logging
 @login_required
 def api(request):
-    url_api = "https://api.everypixel.com/v1/faces"
+    with tracer.start_as_current_span("api_span"):
+        result = None
+        if request.method == 'POST':
+            form = ApiForm(request.POST)
+            if form.is_valid():
+                with tracer.start_as_current_span("form_processing"):
+                    image_url = form.cleaned_data['image_url']
 
-    if request.method == 'POST':
-        form = ApiForm(request.POST)
-        if form.is_valid():
-            image_url = form.cleaned_data['image_url']
-            response = requests.get(url_api, params={'url': image_url}, auth=(CLIENT_ID, CLIENT_SECRET))
-            # Log the response content
-            print(response.content)
-            prediction_data = json.loads(response.text).get('faces', [])
+                    # Log the received image URL
+                    logger.info(f"Image URL received: {image_url}")
 
-            # Save prediction data to the database
-            prediction_instance = ImagePrediction.objects.create(image_url=image_url, prediction_data=prediction_data)
+                    # API Request
+                    auth = (CLIENT_ID, CLIENT_SECRET)
+                    params = {'url': image_url}
 
-            # Convert the timestamp to local time
-            local_time = timezone.localtime(prediction_instance.timestamp)
+                    with tracer.start_as_current_span("external_api_request"):
+                        response = requests.get(url_api, params=params, auth=auth)
 
-            return render(
-                request,
-                'myapp/reponse_formulaire.html',
-                context={'form': form, 'info': prediction_data, 'nombre_personne': len(prediction_data), 'url': image_url, 'timestamp': local_time}
-            )
-    else:
-        form = ApiForm()
+                        if response.status_code == 200:
+                            # Parse the API response
+                            prediction_data = json.loads(response.text).get('faces', [])
+                            
+                            # Log the prediction result
+                            logger.info(f"Prediction Data: {prediction_data}")
+                            
+                            # Save prediction data to the database
+                            prediction_instance = ImagePrediction.objects.create(image_url=image_url, prediction_data=prediction_data)
 
-    return render(request, 'myapp/formulaire.html', context={'form': form})
+                            # Convert timestamp to local time
+                            local_time = timezone.localtime(prediction_instance.timestamp)
 
+                            # Record prediction metrics
+                            prediction_counter_per_minute.add(1)
+
+                            result = {
+                                'form': form,
+                                'info': prediction_data,
+                                'nombre_personne': len(prediction_data),
+                                'url': image_url,
+                                'timestamp': local_time,
+                            }
+                        else:
+                            result = {'error': 'API request failed'}
+        else:
+            form = ApiForm()
+
+        return render(request, 'myapp/reponse_formulaire.html', result)

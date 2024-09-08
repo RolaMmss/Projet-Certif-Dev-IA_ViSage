@@ -12,3 +12,10 @@ pytest-mock
 pytest-django
 gunicorn
 pytest-cov
+
+opentelemetry-sdk
+opentelemetry-instrumentation-django
+opentelemetry-exporter-otlp
+opentelemetry-instrumentation-requests
+
+azure-monitor-opentelemetry-exporter

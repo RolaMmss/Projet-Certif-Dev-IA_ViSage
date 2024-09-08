@@ -147,9 +147,9 @@ LOGIN_URL = '/login/'
 FORMS_URLFIELD_ASSUME_HTTPS = True
 
 
-# # # Monitoring
+# Monitoring
 
-# MONITORING = os.getenv('MONITORING', default='True')
+MONITORING = os.getenv('MONITORING', default='True')
 
-# if MONITORING == 'True':
-#     import myproject.opentelemetry_setup
+if MONITORING == 'True':
+    import myproject.opentelemetry_setup
