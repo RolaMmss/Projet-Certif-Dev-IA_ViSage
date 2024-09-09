@@ -134,40 +134,39 @@ def logout_user(request):
 # Décorateur pour exiger l'authentification de l'utilisateur
 
 
-# Décorateur pour exiger l'authentification de l'utilisateur
-@login_required
-def api(request):
-    if request.method == 'POST':
-        form = ApiForm(request.POST)
-        if form.is_valid():
-            with tracer.start_as_current_span("form_processing"):
-                image_url = form.cleaned_data['image_url']
-                # Log the received image URL
-                logger.info(f"Image URL received: {image_url}")
-                with tracer.start_as_current_span("external_api_request"):
-                    response = requests.get(url_api, params={'url': image_url}, auth=(CLIENT_ID, CLIENT_SECRET))
-                    # Log the response content
-                    print(response.content)
-                    prediction_data = json.loads(response.text).get('faces', [])
-                    # Log the prediction result
-                    logger.info(f"Prediction Data: {prediction_data}")
-                    # Save prediction data to the database
-                    prediction_instance = ImagePrediction.objects.create(image_url=image_url, prediction_data=prediction_data)
+# # Décorateur pour exiger l'authentification de l'utilisateur
+# @login_required
+# def api(request):
+#     if request.method == 'POST':
+#         form = ApiForm(request.POST)
+#         if form.is_valid():
+#             with tracer.start_as_current_span("form_processing"):
+#                 image_url = form.cleaned_data['image_url']
+#                 # Log the received image URL
+#                 logger.info(f"Image URL received: {image_url}")
+#                 with tracer.start_as_current_span("external_api_request"):
+#                     response = requests.get(url_api, params={'url': image_url}, auth=(CLIENT_ID, CLIENT_SECRET))
+#                     # Log the response content
+#                     print(response.content)
+#                     prediction_data = json.loads(response.text).get('faces', [])
+#                     # Log the prediction result
+#                     logger.info(f"Prediction Data: {prediction_data}")
+#                     # Save prediction data to the database
+#                     prediction_instance = ImagePrediction.objects.create(image_url=image_url, prediction_data=prediction_data)
 
-                    # Convert the timestamp to local time
-                    local_time = timezone.localtime(prediction_instance.timestamp)
-                    # Record prediction metrics
-                    prediction_counter_per_minute.add(1)
+#                     # Convert the timestamp to local time
+#                     local_time = timezone.localtime(prediction_instance.timestamp)
+#                     # Record prediction metrics
+#                     prediction_counter_per_minute.add(1)
                 
-                return render(
-                    request,
-                    'myapp/reponse_formulaire.html',
-                    context={'form': form, 'info': prediction_data, 'nombre_personne': len(prediction_data), 'url': image_url, 'timestamp': local_time}
-                )
-    else:
-        form = ApiForm()
-
-    return render(request, 'myapp/formulaire.html', context={'form': form})
+#                     return render(
+#                         request,
+#                         'myapp/reponse_formulaire.html',
+#                         context={'form': form, 'info': prediction_data, 'nombre_personne': len(prediction_data), 'url': image_url, 'timestamp': local_time}
+#                     )
+#     else:
+#         form = ApiForm()
+#     return render(request, 'myapp/formulaire.html', context={'form': form})
 
 # Décorateur pour exiger l'authentification de l'utilisateur
 
@@ -218,54 +217,42 @@ def api(request):
 
 
 
-# @login_required
-# def api(request):
-#     form = ApiForm()  # Initialize form variable
 
-#     with tracer.start_as_current_span("api_span"):
-#         url_api = os.getenv('URL_API')
-#         client_id = os.getenv('CLIENT_ID')
-#         client_secret = os.getenv('CLIENT_SECRET')
 
-#         if not url_api or not client_id or not client_secret:
-#             logger.error("Missing environment variables.")
-#             return render(request, 'myapp/formulaire.html', {'form': form, 'error': 'Configuration error'})
 
-#         if request.method == 'POST':
-#             form = ApiForm(request.POST)
-#             if form.is_valid():
-#                 with tracer.start_as_current_span("form_processing"):
-#                     image_url = form.cleaned_data['image_url']
-#                     # Log the received image URL
-#                     logger.info(f"Image URL received: {image_url}")
+def api(request):
+    if request.method == 'POST':
+        form = ApiForm(request.POST)
+        if form.is_valid():
+            with tracer.start_as_current_span("form_processing"):
+                image_url = form.cleaned_data['image_url']
+                # Log the received image URL
+                logger.info(f"Image URL received: {image_url}")
+                with tracer.start_as_current_span("external_api_request"):
+                    response = requests.get(url_api, params={'url': image_url}, auth=(CLIENT_ID, CLIENT_SECRET))
+                    
+                    # # Log the response content
+                    # logger.info(f"API Response: {response.content}")
+                    
+                    # Check if the response contains age information
+                    prediction_data = json.loads(response.text).get('faces', [])
+                    
+                    # Log prediction data
+                    logger.info(f"Prediction Data: {prediction_data}")
 
-#                     # API Request
-#                     auth = (client_id, client_secret)
-#                     params = {'url': image_url}
-#                     with tracer.start_as_current_span("external_api_request"):
-#                         try:
-#                             response = requests.get(url_api, params=params, auth=auth)
-#                             response.raise_for_status()
-#                             prediction_data = response.json().get('faces', [])
-#                             # Log the prediction result
-#                             logger.info(f"Prediction Data: {prediction_data}")
+                    # Save prediction data to the database
+                    prediction_instance = ImagePrediction.objects.create(image_url=image_url, prediction_data=prediction_data)
 
-#                             # Save prediction data to the database
-#                             prediction_instance = ImagePrediction.objects.create(image_url=image_url, prediction_data=prediction_data)
-#                             # Convert timestamp to local time
-#                             local_time = timezone.localtime(prediction_instance.timestamp)
-#                             # Record prediction metrics
-#                             prediction_counter_per_minute.add(1)
+                    # Convert the timestamp to local time
+                    local_time = timezone.localtime(prediction_instance.timestamp)
+                    # Record prediction metrics
+                    prediction_counter_per_minute.add(1)
+                    return render(
+                        request,
+                        'myapp/reponse_formulaire.html',
+                        context={'form': form, 'info': prediction_data, 'nombre_personne': len(prediction_data), 'url': image_url, 'timestamp': local_time}
+                    )
+    else:
+        form = ApiForm()
 
-#                             return render(
-#                                 request,
-#                                 'myapp/reponse_formulaire.html',
-#                                 {'form': form, 'info': prediction_data, 'nombre_personne': len(prediction_data), 'url': image_url, 'timestamp': local_time}
-#                             )
-#                         except requests.RequestException as e:
-#                             logger.error(f"API request failed: {e}")
-#                             result = {'error': 'API request failed'}
-#             else:
-#                 result = {'form': form}
-
-#         return render(request, 'myapp/formulaire.html', {'form': form, **result})
+    return render(request, 'myapp/formulaire.html', context={'form': form})
