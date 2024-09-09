@@ -3,8 +3,10 @@ from dotenv import load_dotenv
 import os
 load_dotenv()
 # SET UP CONNECTION STRING
-APPLICATIONINSIGHTS_CONNECTION_STRING=os.getenv('APPLICATIONINSIGHTS_CONNECTION_STRING')
+# APPLICATIONINSIGHTS_CONNECTION_STRING=os.getenv('APPLICATIONINSIGHTS_CONNECTION_STRING')
 # INSTRUMENTATION_KEY = os.getenv('INSTRUMENTATION_KEY')
+APPLICATIONINSIGHTS_CONNECTION_STRING='InstrumentationKey=25155d74-cfca-43aa-b788-aa2ca8de59d7;IngestionEndpoint=https://francecentral-1.in.applicationinsights.azure.com/;LiveEndpoint=https://francecentral.livediagnostics.monitor.azure.com/;ApplicationId=2e13bbed-3d25-4592-ab6c-1558e02b2ca8'
+
 
 # PART 1 : SET UP LOGGING EXPORTER
 import logging

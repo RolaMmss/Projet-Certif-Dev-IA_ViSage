@@ -139,6 +139,7 @@ def logout_user(request):
 def api(request):
     with tracer.start_as_current_span("api_span"):
         result = None
+        url_api = os.getenv('URL_API')
         if request.method == 'POST':
             form = ApiForm(request.POST)
             if form.is_valid():

@@ -17,6 +17,7 @@ RUN python3 -m pip install --no-cache-dir --upgrade  -r /app/requirements.txt
 # COPY . /app/
 # Copy the entire Django project into the container
 COPY myproject /app/myproject
+
 # Set environment variables
 ENV PYTHONPATH=/app/myproject
 
