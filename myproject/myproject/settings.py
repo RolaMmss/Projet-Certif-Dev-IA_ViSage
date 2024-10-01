@@ -173,7 +173,7 @@ LOGGING = {
         'azure': {
             'level': 'INFO',  # This ensures that INFO logs are captured
             'class': 'opencensus.ext.azure.log_exporter.AzureLogHandler',
-            'instrumentation_key': os.getenv('APPINSIGHTS_INSTRUMENTATION_KEY'),  # Your instrumentation key
+            'instrumentation_key': os.getenv('APPLICATIONINSIGHTS_CONNECTION_STRING'),  # Your instrumentation key
         },
     },
     'loggers': {
@@ -184,3 +184,4 @@ LOGGING = {
         },
     },
 }
+
