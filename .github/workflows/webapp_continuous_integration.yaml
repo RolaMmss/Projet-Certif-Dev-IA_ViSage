@@ -117,9 +117,9 @@ on:
 
   pull_request:
     types: [opened, synchronize, reopened]
-    branches:
-      - main
-      - develop
+    # branches:
+    #   - main
+    #   - develop
     paths:
       - 'myproject/**'
       - '.github/workflows/webapp_continuous_integration.yaml'
