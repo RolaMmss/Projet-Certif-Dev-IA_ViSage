@@ -26,7 +26,7 @@ import sys
 sys.path.append('../myproject/myproject/')
 
 # Initialize OpenTelemetry setup
-from opentelemetry_setup import *  # Import your setup script here
+from .opentelemetry_setup import *  # Import your setup script here
 
 # Standard Django setup
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'your_project.settings')
