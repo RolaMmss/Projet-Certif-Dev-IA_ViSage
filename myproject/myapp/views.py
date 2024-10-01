@@ -348,6 +348,5 @@ def api(request):
                     )
     else:
         form = ApiForm()
-    
     # Render the initial form
     return render(request, 'myapp/formulaire.html', context={'form': form})
