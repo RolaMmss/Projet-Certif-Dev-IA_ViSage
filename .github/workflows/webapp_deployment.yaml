@@ -49,7 +49,7 @@ jobs:
           az container create \
                 --resource-group ${{ secrets.RESSOURCE_GROUP }} \
                 --name containerinstancewebapp \
-                --image ${{ secrets.DOCKERHUB_USERNAME }}/repo_webapp:latest \
+                --image ${{ secrets.DOCKERHUB_USERNAME }}/imageweb:latest \
                 --cpu 1 \
                 --memory 1 \
                 --ip-address public \
