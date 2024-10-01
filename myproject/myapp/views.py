@@ -17,6 +17,7 @@ from django.utils import timezone
 from myproject.opentelemetry_setup import prediction_counter_per_minute, logger, tracer
 
 from opentelemetry import metrics
+from opentelemetry.sdk.metrics import MeterProvider
 #########################################################
 # Chargement des variables d'environnement depuis le fichier .env
 load_dotenv()
@@ -216,7 +217,9 @@ def logout_user(request):
 
 #         return render(request, 'myapp/formulaire.html', context={'form': form})
 
-
+# Set up the Meter Provider
+metrics.set_meter_provider(MeterProvider())
+meter = metrics.get_meter(__name__)
 # Create a counter for daily predictions
 prediction_counter_per_day = meter.create_counter("prediction_counter_per_day")
 # Create a histogram to record the time taken for predictions
