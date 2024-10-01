@@ -16,7 +16,8 @@ pip install -r requirements.txt
 Change directory to myproject
 pytest tests/test_views.py
 
-<!-- PYTHONPATH=./ pytest myapp/tests.py         ( in case it didn't find api, this will lead to the correct path) -->
+<!-- PYTHONPATH=./ pytest myproject/tests
+        ( in case it didn't find api, this will lead to the correct path) -->
 
 # Launch the web app
 python3 manage.py runserver
