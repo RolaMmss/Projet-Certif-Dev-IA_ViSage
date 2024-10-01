@@ -48,4 +48,6 @@ Execute create_ACI.sh in the terminal as follows:
 
 # http://myapp-container.francecentral.azurecontainer.io:8000/
         
-
+# http://myapp-container.francecentral.azurecontainer.io:8000/
+   # username : Rola
+   # password : passwordrola

@@ -162,3 +162,25 @@ MONITORING = os.getenv('MONITORING', default='True')
 
 if MONITORING == 'True':
     import myproject.opentelemetry_setup
+    
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+        'azure': {
+            'level': 'INFO',  # This ensures that INFO logs are captured
+            'class': 'opencensus.ext.azure.log_exporter.AzureLogHandler',
+            'instrumentation_key': os.getenv('APPINSIGHTS_INSTRUMENTATION_KEY'),  # Your instrumentation key
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'azure'],
+            'level': 'INFO',  # Adjust this level as needed (INFO, WARNING, ERROR, etc.)
+            'propagate': True,
+        },
+    },
+}

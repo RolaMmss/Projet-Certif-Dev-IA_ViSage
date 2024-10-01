@@ -28,7 +28,7 @@ CLIENT_SECRET = os.getenv('CLIENT_SECRET')
 # url_api = os.getenv('URL_API')
 url_api='https://api.everypixel.com/v1/faces'
 
-logger = logging.getLogger(__name__)
+# logger = logging.getLogger(__name__)
 #########################################################
 def hello(request):
 
