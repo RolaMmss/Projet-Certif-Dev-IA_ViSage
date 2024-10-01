@@ -23,8 +23,8 @@ python3 manage.py runserver
 
 ## Deploy the Web App
 - Build and test the Docker Image locally: 
-        - docker build -t imageweb:latest -f Dockerfile .
-        - docker run -p 8000:8000 imageweb:latest
+        - docker build -t repo_webapp:latest -f Dockerfile .
+        - docker run -p 8000:8000 repo_webapp:latest
         - then /docs
         Remark: Each time you build a new image, you have to go to Docker extension in vscode to delete the existant containers.
 - Test docker run with environment variables locally:
