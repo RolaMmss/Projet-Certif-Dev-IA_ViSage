@@ -87,7 +87,7 @@ jobs:
     - name: Build and Push Docker Image
       run: |
         # Correctly define the image tag without leading slash
-        IMAGE_TAG="${{ secrets.DOCKERHUB_USERNAME }}/imageweb:latest"
+        IMAGE_TAG="rola123/repo_webapp:latest"
         echo "Building Docker image with tag: $IMAGE_TAG"
         
         # Build the Docker image
