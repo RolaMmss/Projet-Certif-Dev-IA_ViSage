@@ -16,6 +16,7 @@ import logging
 from django.utils import timezone
 from myproject.opentelemetry_setup import prediction_counter_per_minute, logger, tracer
 
+from opentelemetry import metrics
 #########################################################
 # Chargement des variables d'environnement depuis le fichier .env
 load_dotenv()
@@ -216,7 +217,50 @@ def logout_user(request):
 #         return render(request, 'myapp/formulaire.html', context={'form': form})
 
 
+# Create a counter for daily predictions
+prediction_counter_per_day = meter.create_counter("prediction_counter_per_day")
+# Create a histogram to record the time taken for predictions
+prediction_latency = meter.create_histogram("prediction_latency")
 
+
+
+# def api(request):
+#     if request.method == 'POST':
+#         form = ApiForm(request.POST)
+#         if form.is_valid():
+#             with tracer.start_as_current_span("form_processing"):
+#                 image_url = form.cleaned_data['image_url']
+#                 # Log the received image URL
+#                 logger.info(f"Image URL received: {image_url}")
+#                 with tracer.start_as_current_span("external_api_request"):
+#                     response = requests.get(url_api, params={'url': image_url}, auth=(CLIENT_ID, CLIENT_SECRET))
+                    
+#                     # # Log the response content
+#                     # logger.info(f"API Response: {response.content}")
+                    
+#                     # Check if the response contains age information
+#                     prediction_data = json.loads(response.text).get('faces', [])
+                    
+#                     # Log prediction data
+#                     logger.info(f"Prediction Data: {prediction_data}")
+
+#                     # Save prediction data to the database
+#                     prediction_instance = ImagePrediction.objects.create(image_url=image_url, prediction_data=prediction_data)
+
+#                     # Convert the timestamp to local time
+#                     local_time = timezone.localtime(prediction_instance.timestamp)
+#                     # Record prediction metrics
+#                     prediction_counter_per_minute.add(1)
+#                     prediction_counter_per_day.add(1)
+#                     return render(
+#                         request,
+#                         'myapp/reponse_formulaire.html',
+#                         context={'form': form, 'info': prediction_data, 'nombre_personne': len(prediction_data), 'url': image_url, 'timestamp': local_time}
+#                     )
+#     else:
+#         form = ApiForm()
+
+#     return render(request, 'myapp/formulaire.html', context={'form': form})
 
 
 
@@ -224,35 +268,83 @@ def api(request):
     if request.method == 'POST':
         form = ApiForm(request.POST)
         if form.is_valid():
-            with tracer.start_as_current_span("form_processing"):
+            # Start tracing for form processing
+            with tracer.start_as_current_span("form_processing") as span:
                 image_url = form.cleaned_data['image_url']
-                # Log the received image URL
+                
+                # Log the image URL received
                 logger.info(f"Image URL received: {image_url}")
-                with tracer.start_as_current_span("external_api_request"):
-                    response = requests.get(url_api, params={'url': image_url}, auth=(CLIENT_ID, CLIENT_SECRET))
+                
+                # Start tracing for the external API request
+                with tracer.start_as_current_span("external_api_request") as api_span:
+                    try:
+                        response = requests.get(
+                            url_api, 
+                            params={'url': image_url}, 
+                            auth=(CLIENT_ID, CLIENT_SECRET)
+                        )
+                        response.raise_for_status()  # Raise an exception for any HTTP errors
+                        
+                        # Log the response status and content
+                        logger.info(f"API Response Status: {response.status_code}")
+                        logger.debug(f"API Response Content: {response.content}")
+                        
+                    except requests.exceptions.RequestException as e:
+                        logger.error(f"API Request failed: {e}")
+                        # Add an event to the span to track the error
+                        api_span.add_event("API Request Failure", attributes={"error": str(e)})
+                        return render(
+                            request, 
+                            'myapp/error_page.html', 
+                            context={'form': form, 'error_message': 'Failed to retrieve predictions from the API.'}
+                        )
                     
-                    # # Log the response content
-                    # logger.info(f"API Response: {response.content}")
-                    
-                    # Check if the response contains age information
+                    # Parse the prediction data
                     prediction_data = json.loads(response.text).get('faces', [])
                     
                     # Log prediction data
                     logger.info(f"Prediction Data: {prediction_data}")
-
+                    
                     # Save prediction data to the database
-                    prediction_instance = ImagePrediction.objects.create(image_url=image_url, prediction_data=prediction_data)
-
-                    # Convert the timestamp to local time
-                    local_time = timezone.localtime(prediction_instance.timestamp)
+                    try:
+                        with tracer.start_as_current_span("db_save") as db_span:
+                            prediction_instance = ImagePrediction.objects.create(
+                                image_url=image_url, 
+                                prediction_data=prediction_data
+                            )
+                            
+                            # Convert the timestamp to local time
+                            local_time = timezone.localtime(prediction_instance.timestamp)
+                            # Log successful database save
+                            logger.info(f"Prediction saved to DB at {local_time}")
+                    
+                    except Exception as db_error:
+                        logger.error(f"Failed to save prediction data: {db_error}")
+                        db_span.add_event("DB Save Failure", attributes={"error": str(db_error)})
+                        return render(
+                            request, 
+                            'myapp/error_page.html', 
+                            context={'form': form, 'error_message': 'Failed to save prediction to the database.'}
+                        )
+                    
                     # Record prediction metrics
                     prediction_counter_per_minute.add(1)
+                    prediction_counter_per_day.add(1)
+
+                    # Render the response form with prediction data
                     return render(
                         request,
                         'myapp/reponse_formulaire.html',
-                        context={'form': form, 'info': prediction_data, 'nombre_personne': len(prediction_data), 'url': image_url, 'timestamp': local_time}
+                        context={
+                            'form': form,
+                            'info': prediction_data,
+                            'nombre_personne': len(prediction_data),
+                            'url': image_url,
+                            'timestamp': local_time
+                        }
                     )
     else:
         form = ApiForm()
-
+    
+    # Render the initial form
     return render(request, 'myapp/formulaire.html', context={'form': form})

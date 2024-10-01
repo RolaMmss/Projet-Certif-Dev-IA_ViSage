@@ -1,4 +1,6 @@
-#!/home/utilisateur/Bureau/Projet-Certif-Dev-IA_ViSage/myenv/bin/python3
+#!/bin/sh
+'''exec' "/home/utilisateur/Bureau/E4 Web App/Projet-Certif-Dev-IA_ViSage/myenv/bin/python3" "$0" "$@"
+' '''
 # -*- coding: utf-8 -*-
 import re
 import sys

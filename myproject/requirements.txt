@@ -19,3 +19,6 @@ opentelemetry-exporter-otlp
 opentelemetry-instrumentation-requests
 
 azure-monitor-opentelemetry-exporter
+
+opentelemetry-api 
+opentelemetry-instrumentation
