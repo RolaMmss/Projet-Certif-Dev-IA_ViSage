@@ -212,42 +212,45 @@
 
 
 # Deployment
+# This workflow is designed to automate the deployment of a Docker image to an Azure Container Instance (ACI). 
+
 name: Docker-deployment
 
+# Set the trigger for the workflow when called by another workflow using workflow_call
 on:
   workflow_call:
     inputs:
       app_name:
         required: true
         type: string
-
+# Job Definition of build-and-deploy which runs on Ubuntu env
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2    # Clone the repository so that the workflow can access the project files
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v1   # Enable building multi-platform Docker images 
 
-      - name: Build the Docker image
+      - name: Build the Docker image    # using the local Dockerfile + tag it
         run: |
           docker build -t rola123/imagewebapp:latest .
 
-      - name: Log in to Docker Hub
+      - name: Log in to Docker Hub   # using the credentials stored in GitHub Secrets 
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Push the Docker image
         run: |
           docker push rola123/imagewebapp:latest
 
-      - name: Azure Login
+      - name: Azure Login    # Log into Azure using the credentials 
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Debugging - Check GitHub Secrets
+      - name: Debugging - Check GitHub Secrets   # To ensure the correct values are passed and referenced in the workflow.
         run: |
           echo "Docker Hub Username: '${{ secrets.DOCKERHUB_USERNAME }}'"
           echo "Resource Group: '${{ secrets.RESSOURCE_GROUP }}'"
@@ -283,6 +286,6 @@ jobs:
                 --image rola123/imagewebapp:latest
             fi
             
-      - name: Test Endpoint
+      - name: Test Endpoint   #  Send a request to the container's public endpoint to check if the application is running correctly and accessible.
         run: curl -I containerinstancewebapp.francecentral.azurecontainer.io:8000/
 
