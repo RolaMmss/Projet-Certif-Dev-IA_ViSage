@@ -106,7 +106,7 @@
 
 #---------------------------------------------
 
-
+# CI
 name: CI Pipeline
 
 on:
@@ -163,10 +163,10 @@ jobs:
         run: |
           source myenv/bin/activate
           python myproject/manage.py test 
-          
+
       - name: Set environment variable
         env:
           APPLICATIONINSIGHTS_CONNECTION_STRING: ${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
         run: |
           source myenv/bin/activate
-          python manage.py test 
+          python myproject/manage.py test 
