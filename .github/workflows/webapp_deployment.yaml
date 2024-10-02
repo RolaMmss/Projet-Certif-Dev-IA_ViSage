@@ -126,6 +126,8 @@ jobs:
             echo "Creating a new container instance..."
             az container create \
                   --resource-group ${{ secrets.RESSOURCE_GROUP }} \
+                  --resource-group ${{ secrets.RESSOURCE_GROUP }} \
+
                   --name containerinstancewebapp \
                   --image rola123/imagewebapp:latest \
                   --cpu 1 \
@@ -133,6 +135,7 @@ jobs:
                   --ip-address public \
                   --dns-name-label containerinstancewebapp \
                   --ports 80 8000 \
+                  --environment-variables \
                   --registry-username ${{ secrets.DOCKERHUB_USERNAME }} \
                   --registry-password ${{ secrets.DOCKERHUB_PASSWORD }}
 
