@@ -84,19 +84,17 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
 
-    - name: Build and Push Docker Image
-      run: |
-        docker build -t rola123/imagewebapp:latest -f Dockerfile .
-        echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/repo_webapp:latest
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-    # - name: Build and Push Docker Image
-    #   run: |
-    #     IMAGE_TAG="${{ secrets.DOCKERHUB_USERNAME }}/repo_webapp:latest"
-    #     echo "Building Docker image with tag: $IMAGE_TAG"
-    #     docker build -t $IMAGE_TAG -f api/Dockerfile .
-    #     echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-    #     docker push $IMAGE_TAG
+
+    - name: Build the Docker image
+      run: |
+        docker build -t rola123/imagewebapp:latest .
+
+    - name: Push the Docker image
+      run: |
+        docker push rola123/imagewebapp:latest
 
 
     - name: Azure Login
