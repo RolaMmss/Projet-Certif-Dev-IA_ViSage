@@ -157,8 +157,9 @@ jobs:
       - name: Set DJANGO_SETTINGS_MODULE
         run: echo "DJANGO_SETTINGS_MODULE=myproject.settings" >> $GITHUB_ENV
 
-      - name: Run tests
+      - name: Set environment variable
+        env:
+          APPLICATIONINSIGHTS_CONNECTION_STRING: ${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
         run: |
           source myenv/bin/activate
-          cd myproject
-          python manage.py test
+          python manage.py test 
