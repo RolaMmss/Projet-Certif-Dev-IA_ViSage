@@ -47,14 +47,15 @@ Execute create_ACI.sh in the terminal as follows:
     chmod +x scripts/create_ACI.sh
     ./scripts/create_ACI.sh
 
-# http://myapp-container.francecentral.azurecontainer.io:8000/
-        
-# http://myapp-container.francecentral.azurecontainer.io:8000/
-   # username : Rola
-   # password : passwordrola
+ http://myapp-container.francecentral.azurecontainer.io:8000/
+   # superuser:  
+   username : Rola
+   
+   password : passwordrola
 
 # Monitoring
 ## Intégration de OpenTelemetry et Azure Application Insights
+
 1. Installer les dépendances nécessaires:
 
 pip install opentelemetry-api opentelemetry-sdk opentelemetry-exporter-azure-monitor
