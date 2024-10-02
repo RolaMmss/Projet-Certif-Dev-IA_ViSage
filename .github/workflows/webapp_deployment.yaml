@@ -1,3 +1,148 @@
+# # name: Docker-deployment
+
+# # on:
+# #     workflow_call:
+# #         inputs:
+# #             app_name:
+# #                 required: true
+# #                 type: string
+
+# # jobs:
+# #   build-and-deploy:
+# #     runs-on: ubuntu-latest
+# #     steps:
+# #     - name: Checkout repository
+# #       uses: actions/checkout@v2
+
+# #     - name: Set up Docker Buildx
+# #       uses: docker/setup-buildx-action@v1
+
+# #     - name: Build and Push Docker Image
+# #       run: |
+# #         IMAGE_TAG="${{ secrets.DOCKERHUB_USERNAME }}/imageweb:latest"
+# #         echo "Building Docker image with tag: $IMAGE_TAG"
+# #         docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/imageweb:latest -f Dockerfile .
+# #         echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+# #         docker push ${{ secrets.DOCKERHUB_USERNAME }}/imageweb:latest
+
+# #     - name: Azure Login
+# #       uses: azure/login@v1
+# #       with:
+# #         creds: ${{ secrets.AZURE_CREDENTIALS }}
+        
+# #     - name: Create Azure Container Instance
+# #       uses: azure/CLI@v2
+# #       with:
+# #         azcliversion: 2.61.0
+# #         inlineScript: |
+# #           az account set --subscription ${{ secrets.SUBSCRIPTION_ID }}
+          
+# #           # Check if the container exists
+# #           container_exists=$(az container show --resource-group ${{ secrets.RESSOURCE_GROUP }} --name containerinstancewebapp --query "name" -o tsv || echo "notfound")
+      
+# #           if [ "$container_exists" != "notfound" ]; then
+# #             echo "Container instance exists. Deleting..."
+# #             az container delete --resource-group ${{ secrets.RESSOURCE_GROUP }} --name containerinstancewebapp --yes
+# #             echo "Container instance deleted."
+# #           else
+# #             echo "Container instance does not exist."
+# #           fi
+      
+# #           az container create \
+# #                 --resource-group ${{ secrets.RESSOURCE_GROUP }} \
+# #                 --name containerinstancewebapp \
+# #                 --image ${{ secrets.DOCKERHUB_USERNAME }}/imageweb:latest \
+# #                 --cpu 1 \
+# #                 --memory 1 \
+# #                 --ip-address public \
+# #                 --dns-name-label containerinstancewebapp \
+# #                 --ports 80 8000 \
+# #                 --registry-username ${{ secrets.DOCKERHUB_USERNAME }} \
+# #                 --registry-password ${{ secrets.DOCKERHUB_PASSWORD }}
+
+# #     - name: Test Endpoint
+# #       run: curl -I containerinstancewebapp.francecentral.azurecontainer.io:8000/docs
+
+
+
+
+# # Deployment
+# name: Docker-deployment
+
+# on:
+#   workflow_call:
+#     inputs:
+#       app_name:
+#         required: true
+#         type: string
+
+# jobs:
+#   build-and-deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
+
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v1
+
+#       - name: Build the Docker image
+#         run: |
+#           docker build -t rola123/imagewebapp:latest .
+
+#       - name: Log in to Docker Hub
+#         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+#       - name: Push the Docker image
+#         run: |
+#           docker push rola123/imagewebapp:latest
+
+#       - name: Azure Login
+#         uses: azure/login@v1
+#         with:
+#           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+#       - name: Debugging - Check GitHub Secrets
+#         run: |
+#           echo "Docker Hub Username: '${{ secrets.DOCKERHUB_USERNAME }}'"
+#           echo "Resource Group: '${{ secrets.RESSOURCE_GROUP }}'"
+
+#       - name: Create or Update Azure Container Instance
+#         uses: azure/CLI@v2
+#         with:
+#           azcliversion: 2.61.0
+#           inlineScript: |
+#             az account set --subscription ${{ secrets.SUBSCRIPTION_ID }}
+
+#             # Check if the container instance exists
+#             container_exists=$(az container show --resource-group ${{ secrets.RESSOURCE_GROUP }} --name containerinstancewebapp --query "name" -o tsv || echo "notfound")
+
+#             if [ "$container_exists" != "notfound" ]; then
+#               echo "Container instance exists. Deleting..."
+#               az container delete --resource-group ${{ secrets.RESSOURCE_GROUP }} --name containerinstancewebapp --yes
+#               echo "Container instance deleted."
+#             fi
+
+#             echo "Creating a new container instance..."
+#             az container create \
+#                   --resource-group ${{ secrets.RESSOURCE_GROUP }} \
+#                   --name containerinstancewebapp \
+#                   --image rola123/imagewebapp:latest \
+#                   --cpu 1 \
+#                   --memory 1 \
+#                   --ip-address public \
+#                   --dns-name-label containerinstancewebapp \
+#                   --ports 80 8000 \
+#                   --environment-variables \
+#                   --registry-username ${{ secrets.DOCKERHUB_USERNAME }} \
+#                   --registry-password ${{ secrets.DOCKERHUB_PASSWORD }}
+
+#       - name: Test Endpoint
+#         run: curl -I containerinstancewebapp.francecentral.azurecontainer.io:8000/
+
+
+
+
 # name: Docker-deployment
 
 # on:
@@ -114,31 +259,30 @@ jobs:
           inlineScript: |
             az account set --subscription ${{ secrets.SUBSCRIPTION_ID }}
 
-            # Check if the container instance exists
+            # Vérifier si le container existe déjà
             container_exists=$(az container show --resource-group ${{ secrets.RESSOURCE_GROUP }} --name containerinstancewebapp --query "name" -o tsv || echo "notfound")
 
-            if [ "$container_exists" != "notfound" ]; then
-              echo "Container instance exists. Deleting..."
-              az container delete --resource-group ${{ secrets.RESSOURCE_GROUP }} --name containerinstancewebapp --yes
-              echo "Container instance deleted."
+            if [ "$container_exists" == "notfound" ]; then
+              echo "Container instance does not exist. Creating a new one..."
+              az container create \
+                --resource-group ${{ secrets.RESSOURCE_GROUP }} \
+                --name containerinstancewebapp \
+                --image rola123/imagewebapp:latest \
+                --cpu 1 \
+                --memory 1 \
+                --ip-address public \
+                --dns-name-label containerinstancewebapp \
+                --ports 80 8000 \
+                --registry-username ${{ secrets.DOCKERHUB_USERNAME }} \
+                --registry-password ${{ secrets.DOCKERHUB_PASSWORD }}
+            else
+              echo "Container instance exists. Updating the container with the new image..."
+              az container update \
+                --resource-group ${{ secrets.RESSOURCE_GROUP }} \
+                --name containerinstancewebapp \
+                --image rola123/imagewebapp:latest
             fi
-
-            echo "Creating a new container instance..."
-            az container create \
-                  --resource-group ${{ secrets.RESSOURCE_GROUP }} \
-                  --resource-group ${{ secrets.RESSOURCE_GROUP }} \
-
-                  --name containerinstancewebapp \
-                  --image rola123/imagewebapp:latest \
-                  --cpu 1 \
-                  --memory 1 \
-                  --ip-address public \
-                  --dns-name-label containerinstancewebapp \
-                  --ports 80 8000 \
-                  --environment-variables \
-                  --registry-username ${{ secrets.DOCKERHUB_USERNAME }} \
-                  --registry-password ${{ secrets.DOCKERHUB_PASSWORD }}
-
+            
       - name: Test Endpoint
         run: curl -I containerinstancewebapp.francecentral.azurecontainer.io:8000/
 
