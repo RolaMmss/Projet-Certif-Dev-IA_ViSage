@@ -300,5 +300,4 @@ jobs:
 
             
       - name: Test Endpoint   #  Send a request to the container's public endpoint to check if the application is running correctly and accessible.
-        run: curl -I containerinstancewebapp.francecentral.azurecontainer.io:8000/
-
+        run: curl -I http://containerinstancewebapp.francecentral.azurecontainer.io:8000/
