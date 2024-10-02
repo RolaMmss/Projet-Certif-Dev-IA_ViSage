@@ -254,6 +254,7 @@ jobs:
         run: |
           echo "Docker Hub Username: '${{ secrets.DOCKERHUB_USERNAME }}'"
           echo "Resource Group: '${{ secrets.RESSOURCE_GROUP }}'"
+          echo "Application Insights Key: '${{ secrets.APPLICATION_INSIGHTS_INSTRUMENTATION_KEY }}'"
 
       - name: Create or Update Azure Container Instance
         uses: azure/CLI@v2
@@ -277,7 +278,8 @@ jobs:
                 --dns-name-label containerinstancewebapp \
                 --ports 80 8000 \
                 --registry-username ${{ secrets.DOCKERHUB_USERNAME }} \
-                --registry-password ${{ secrets.DOCKERHUB_PASSWORD }}
+                --registry-password ${{ secrets.DOCKERHUB_PASSWORD }} \
+                --environment-variables APPLICATION_INSIGHTS_INSTRUMENTATION_KEY=${{ secrets.APPLICATION_INSIGHTS_INSTRUMENTATION_KEY }}
             else
               echo "Container instance exists. Deleting the existing container..."
               az container delete \
@@ -295,9 +297,15 @@ jobs:
                 --dns-name-label containerinstancewebapp \
                 --ports 80 8000 \
                 --registry-username ${{ secrets.DOCKERHUB_USERNAME }} \
-                --registry-password ${{ secrets.DOCKERHUB_PASSWORD }}
+                --registry-password ${{ secrets.DOCKERHUB_PASSWORD }} \
+                --environment-variables APPLICATION_INSIGHTS_INSTRUMENTATION_KEY=${{ secrets.APPLICATION_INSIGHTS_INSTRUMENTATION_KEY }}
             fi
 
-            
-      - name: Test Endpoint   #  Send a request to the container's public endpoint to check if the application is running correctly and accessible.
-        run: curl -I http://containerinstancewebapp.francecentral.azurecontainer.io:8000/
+      - name: Check Container Logs
+        run: |
+          az container logs --resource-group ${{ secrets.RESSOURCE_GROUP }} --name containerinstancewebapp --follow
+      
+      - name: Test Endpoint
+        run: |
+          endpoint=$(az container show --resource-group ${{ secrets.RESSOURCE_GROUP }} --name containerinstancewebapp --query "ipAddress.ip" -o tsv)
+          curl -I http://$endpoint:8000/
