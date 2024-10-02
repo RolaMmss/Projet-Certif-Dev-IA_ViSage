@@ -64,6 +64,8 @@
 #       run: curl -I containerinstancewebapp.francecentral.azurecontainer.io:8000/docs
 
 
+
+
 # Deployment
 name: Docker-deployment
 
@@ -100,27 +102,28 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Create Azure Container Instance
+      - name: Debugging - Check GitHub Secrets
+        run: |
+          echo "Docker Hub Username: '${{ secrets.DOCKERHUB_USERNAME }}'"
+          echo "Resource Group: '${{ secrets.RESSOURCE_GROUP }}'"
+
+      - name: Create or Update Azure Container Instance
         uses: azure/CLI@v2
         with:
           azcliversion: 2.61.0
           inlineScript: |
             az account set --subscription ${{ secrets.SUBSCRIPTION_ID }}
-            
-            # Check if the container exists
+
+            # Check if the container instance exists
             container_exists=$(az container show --resource-group ${{ secrets.RESSOURCE_GROUP }} --name containerinstancewebapp --query "name" -o tsv || echo "notfound")
-        
+
             if [ "$container_exists" != "notfound" ]; then
               echo "Container instance exists. Deleting..."
               az container delete --resource-group ${{ secrets.RESSOURCE_GROUP }} --name containerinstancewebapp --yes
               echo "Container instance deleted."
-            else
-              echo "Container instance does not exist."
             fi
-        
-            # Debugging - print registry username
-            echo "Using Docker registry username: ${{ secrets.DOCKERHUB_USERNAME }}"
-        
+
+            echo "Creating a new container instance..."
             az container create \
                   --resource-group ${{ secrets.RESSOURCE_GROUP }} \
                   --name containerinstancewebapp \
