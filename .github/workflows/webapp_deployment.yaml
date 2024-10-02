@@ -86,9 +86,18 @@ jobs:
 
     - name: Build and Push Docker Image
       run: |
-        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/repo_webapp:latest  -f api/Dockerfile .
+        docker build -t rola123/imagewebapp:latest -f Dockerfile .
         echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/repo_webapp:latest
+
+    # - name: Build and Push Docker Image
+    #   run: |
+    #     IMAGE_TAG="${{ secrets.DOCKERHUB_USERNAME }}/repo_webapp:latest"
+    #     echo "Building Docker image with tag: $IMAGE_TAG"
+    #     docker build -t $IMAGE_TAG -f api/Dockerfile .
+    #     echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+    #     docker push $IMAGE_TAG
+
 
     - name: Azure Login
       uses: azure/login@v1
