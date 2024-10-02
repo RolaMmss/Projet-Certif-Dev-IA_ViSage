@@ -100,36 +100,35 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Create or Update Azure Container Instance
+      - name: Create Azure Container Instance
         uses: azure/CLI@v2
         with:
           azcliversion: 2.61.0
           inlineScript: |
             az account set --subscription ${{ secrets.SUBSCRIPTION_ID }}
-
-            # Vérifier si le container existe déjà
-            container_exists=$(az container show --resource-group ${{ secrets.RESSOURCE_GROUP }} --name containerinstancewebapp --query "name" -o tsv || echo "notfound")
-
-            if [ "$container_exists" == "notfound" ]; then
-              echo "Container instance does not exist. Creating a new one..."
-              az container create \
-                --resource-group ${{ secrets.RESSOURCE_GROUP }} \
-                --name containerinstancewebapp \
-                --image rola123/imagewebapp:latest \
-                --cpu 1 \
-                --memory 1 \
-                --ip-address public \
-                --dns-name-label containerinstancewebapp \
-                --ports 80 8000 \
-                --registry-username ${{ secrets.DOCKERHUB_USERNAME }} \
-                --registry-password ${{ secrets.DOCKERHUB_PASSWORD }}
+            
+            # Check if the container exists
+            container_exists=$(az container show --resource-group ${{ secrets.RESSOURCE_GROUP }} --name ${{ inputs.app_name }} --query "name" -o tsv || echo "notfound")
+      
+            if [ "$container_exists" != "notfound" ]; then
+              echo "Container instance exists. Deleting..."
+              az container delete --resource-group ${{ secrets.RESSOURCE_GROUP }} --name ${{ inputs.app_name }} --yes
+              echo "Container instance deleted."
             else
-              echo "Container instance exists. Updating the container with the new image..."
-              az container update \
-                --resource-group ${{ secrets.RESSOURCE_GROUP }} \
-                --name containerinstancewebapp \
-                --image rola123/imagewebapp:latest
+              echo "Container instance does not exist."
             fi
-
+      
+            az container create \
+              --resource-group ${{ secrets.RESSOURCE_GROUP }} \
+              --name ${{ inputs.app_name }} \
+              --image ${{ secrets.DOCKERHUB_USERNAME }}/app_web:latest \
+              --cpu 1 \
+              --memory 1 \
+              --ip-address public \
+              --dns-name-label ${{ inputs.app_name }} \
+              --ports 8000 \
+              --environment-variables \
+              "TOKEN"=${{ secrets.TOKEN }} \
+              "APP_NAME"=${{ secrets.APP_NAME }} \
       - name: Test Endpoint
         run: curl -I http://containerinstancewebapp.francecentral.azurecontainer.io:8000/docs
