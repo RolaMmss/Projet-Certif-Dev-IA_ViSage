@@ -24,8 +24,8 @@ python3 manage.py runserver
 
 ## Deploy the Web App
 - Build and test the Docker Image locally: 
-        - docker build -t imageweb:latest -f Dockerfile .
-        - docker run -p 8000:8000 imageweb:latest
+        - docker build -t imagewebapp:latest -f Dockerfile .
+        - docker run -p 8000:8000 imagewebapp:latest
         - then /docs
         Remark: Each time you build a new image, you have to go to Docker extension in vscode to delete the existant containers.
 - Test docker run with environment variables locally:
@@ -38,8 +38,8 @@ docker run -p 8000:8000 -e "APPLICATIONINSIGHTS_CONNECTION_STRING=Instrumentatio
 
 - Tag the image before pushing it to dockerhub
         - docker login
-        - docker tag imageweb rola123/repo_webapp:latest
-        - docker push rola123/repo_webapp:latest
+        - docker tag imageweb rola123/imagewebapp:latest
+        - docker push rola123/imagewebapp:latest
 
 # Create Azure Container Instance
 Execute create_ACI.sh in the terminal as follows:
