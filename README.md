@@ -52,3 +52,25 @@ Execute create_ACI.sh in the terminal as follows:
 # http://myapp-container.francecentral.azurecontainer.io:8000/
    # username : Rola
    # password : passwordrola
+
+# Monitoring
+## Intégration de OpenTelemetry et Azure Application Insights
+1. Installer les dépendances nécessaires:
+
+pip install opentelemetry-api opentelemetry-sdk opentelemetry-exporter-azure-monitor
+
+Then install them: pip install -r requirements.txt
+
+2. Configure OpenTelemetry via opentelemetry_setup.py
+
+3. Load the configuration in settings.py
+
+4. Set up environment variables:
+
+APPLICATIONINSIGHTS_CONNECTION_STRING
+and save it in .env (for local) and GitHub secrets (for deployed)
+
+4. Add metrics and traces (views.py)
+
+5. Verify the data in Azure Application Insights
+
