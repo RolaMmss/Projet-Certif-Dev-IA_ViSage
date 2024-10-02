@@ -163,17 +163,34 @@ MONITORING = os.getenv('MONITORING', default='True')
 if MONITORING == 'True':
     import myproject.opentelemetry_setup
     
+# Assuming your connection string is stored in APPLICATIONINSIGHTS_CONNECTION_STRING
+connection_string = os.getenv('APPLICATIONINSIGHTS_CONNECTION_STRING')
+
+# Extract the instrumentation key if needed
+# You can either use the entire connection string or parse it
+# Here, we'll use the whole connection string for the Azure Log Handler
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
+            'formatter': 'verbose',  # or 'simple' based on your preference
         },
         'azure': {
             'level': 'INFO',  # This ensures that INFO logs are captured
             'class': 'opencensus.ext.azure.log_exporter.AzureLogHandler',
-            'instrumentation_key': os.getenv('APPLICATIONINSIGHTS_CONNECTION_STRING'),  # Your instrumentation key
+            'connection_string': connection_string,  # Use the connection string directly
         },
     },
     'loggers': {
@@ -182,6 +199,10 @@ LOGGING = {
             'level': 'INFO',  # Adjust this level as needed (INFO, WARNING, ERROR, etc.)
             'propagate': True,
         },
+        'opencensus': {  # Optional: add logging for OpenCensus if needed
+            'handlers': ['azure'],
+            'level': 'INFO',
+            'propagate': False,
+        },
     },
 }
-
