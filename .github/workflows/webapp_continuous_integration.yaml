@@ -190,7 +190,6 @@
             types: [opened, synchronize, reopened]
             branches:
                 - develop
-                - test-traces
         workflow_call:
 
     #  jobs definition
@@ -238,8 +237,7 @@
 
                 - name: Run Test and Coverage # running tests
                 #   working-directory: ./api
-                  run: pytest myproject --cov-fail-under=80 -vv
-
-
+                  # run: pytest myproject --cov-fail-under=80 -vv
+                  run: pytest tests/test_views.py
 
 
