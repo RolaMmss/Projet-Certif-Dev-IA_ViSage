@@ -84,11 +84,10 @@ on:
   push:
     # branches:
     #   - main 
-      # - develop
     paths:
       - 'myproject/**'
       - '.github/workflows/webapp_continuous_deployment.yaml'
-      - '.github/workflows/webapp_deployment.yaml'
+      # - '.github/workflows/webapp_deployment.yaml'
 
 jobs:
   health-check-job:

@@ -1,165 +1,244 @@
-# name: CI Pipeline
+# # # name: CI Pipeline
 
-# on:
-#   push:
-#     # branches:
-#     #   - 'test-ci/**'
-#     #   - 'develop'
-#     #   - 'main' # to remove after testing
-#     paths:
-#       - 'myproject/**'  # Adjust the path based on your Django project structure
-#       - '.github/workflows/webapp_continuous_integration.yaml'
-#   pull_request:
-#       types: [opened, synchronize, reopened]
-#       branches:
-#           - develop
-#   workflow_call:
+# # # on:
+# # #   push:
+# # #     # branches:
+# # #     #   - 'test-ci/**'
+# # #     #   - 'develop'
+# # #     #   - 'main' # to remove after testing
+# # #     paths:
+# # #       - 'myproject/**'  # Adjust the path based on your Django project structure
+# # #       - '.github/workflows/webapp_continuous_integration.yaml'
+# # #   pull_request:
+# # #       types: [opened, synchronize, reopened]
+# # #       branches:
+# # #           - develop
+# # #   workflow_call:
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
+# # # jobs:
+# # #   build:
+# # #     runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v2
+# # #     steps:
+# # #       - name: Checkout code
+# # #         uses: actions/checkout@v2
 
-#       - name: Cache dependencies
-#         uses: actions/cache@v2
-#         with:
-#           path: ~/.cache/pip
-#           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-#           restore-keys: |
-#             ${{ runner.os }}-pip-
+# # #       - name: Cache dependencies
+# # #         uses: actions/cache@v2
+# # #         with:
+# # #           path: ~/.cache/pip
+# # #           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+# # #           restore-keys: |
+# # #             ${{ runner.os }}-pip-
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v2
-#         with:
-#           python-version: '3.10'  # Adjust Python version as needed
+# # #       - name: Set up Python
+# # #         uses: actions/setup-python@v2
+# # #         with:
+# # #           python-version: '3.10'  # Adjust Python version as needed
 
-#       - name: Set up virtual environment and install dependencies
-#         run: |
-#           python -m venv myenv
-#           source myenv/bin/activate
-#           pip install --upgrade pip
-#           pip install -r myproject/requirements.txt
+# # #       - name: Set up virtual environment and install dependencies
+# # #         run: |
+# # #           python -m venv myenv
+# # #           source myenv/bin/activate
+# # #           pip install --upgrade pip
+# # #           pip install -r myproject/requirements.txt
 
-#       - name: Set environment variables
-#         env:
-#           DJANGO_SETTINGS_MODULE: myproject.settings
-#         run: echo "Environment variables set"
+# # #       - name: Set environment variables
+# # #         env:
+# # #           DJANGO_SETTINGS_MODULE: myproject.settings
+# # #         run: echo "Environment variables set"
 
-#       - name: Verify manage.py file
-#         run: ls myproject/manage.py  # Ensure manage.py file exists in the correct path
+# # #       - name: Verify manage.py file
+# # #         run: ls myproject/manage.py  # Ensure manage.py file exists in the correct path
 
-#       - name: Run Django checks
-#         run: |
-#           source myenv/bin/activate
-#           python myproject/manage.py check
+# # #       - name: Run Django checks
+# # #         run: |
+# # #           source myenv/bin/activate
+# # #           python myproject/manage.py check
 
-#       # - name: Run Django tests
-#       #   run: |
-#       #     source myenv/bin/activate
-#       #     python myproject/manage.py test myapp --settings=myproject.settings
+# # #       # - name: Run Django tests
+# # #       #   run: |
+# # #       #     source myenv/bin/activate
+# # #       #     python myproject/manage.py test myapp --settings=myproject.settings
 
-#       # - name: Run pytest
-#       #   run: |
-#       #     source myenv/bin/activate
-#       #     pytest myapp/tests.py 
+# # #       # - name: Run pytest
+# # #       #   run: |
+# # #       #     source myenv/bin/activate
+# # #       #     pytest myapp/tests.py 
 
-# #  pytest app_web --cov-fail-under=80 -vv
-#-------------------------------------------------
+# # # #  pytest app_web --cov-fail-under=80 -vv
+# # #-------------------------------------------------
 
-# .github/workflows/integration.yml
+# # # .github/workflows/integration.yml
 
-# name: Integration Test
+# # # name: Integration Test
 
-# on:
-#   push:
-#     # branches:
-#     #   - main
-#     #   - develop
-#   pull_request:
-#     branches:
-#       - main
+# # # on:
+# # #   push:
+# # #     # branches:
+# # #     #   - main
+# # #     #   - develop
+# # #   pull_request:
+# # #     branches:
+# # #       - main
 
-# jobs:
-#   integration-test:
-#     runs-on: ubuntu-latest
+# # # jobs:
+# # #   integration-test:
+# # #     runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v2
+# # #     steps:
+# # #       - name: Checkout repository
+# # #         uses: actions/checkout@v2
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v2
-#         with:
-#           python-version: '3.10'
+# # #       - name: Set up Python
+# # #         uses: actions/setup-python@v2
+# # #         with:
+# # #           python-version: '3.10'
 
-#       - name: Install dependencies
-#         run: |
-#           python3 -m pip install --upgrade pip
-#           pip install -r myproject/requirements.txt
+# # #       - name: Install dependencies
+# # #         run: |
+# # #           python3 -m pip install --upgrade pip
+# # #           pip install -r myproject/requirements.txt
 
-#       - name: Run tests
-#         run: |
-#           python3 myproject/manage.py test
+# # #       - name: Run tests
+# # #         run: |
+# # #           python3 myproject/manage.py test
 
-#---------------------------------------------
+# # #---------------------------------------------
 
-# CI
-name: CI Pipeline
 
-on:
-  push:
-    paths:
-      - 'myproject/**'
-      - '.github/workflows/webapp_continuous_integration.yaml'
 
-  pull_request:
-    types: [opened, synchronize, reopened]
-    # branches:
-    #   - main
-    #   - develop
-    paths:
-      - 'myproject/**'
-      - '.github/workflows/webapp_continuous_integration.yaml'
-  workflow_call:  # Make the workflow reusable
-jobs:
-  build:
-    runs-on: ubuntu-latest
 
-    env:
-          DJANGO_SETTINGS_MODULE: myproject.settings
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
 
-      - name: Cache dependency
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+# # # CI
+# # name: CI Pipeline
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.10'
+# # on:
+# #   push:
+# #     paths:
+# #       - 'myproject/**'
+# #       - '.github/workflows/webapp_continuous_integration.yaml'
 
-      - name: Install dependencies
-        run: |
-          python -m venv myenv
-          source myenv/bin/activate
-          pip install -r myproject/requirements.txt
+# #   pull_request:
+# #     types: [opened, synchronize, reopened]
+# #     # branches:
+# #     #   - main
+# #     #   - develop
+# #     paths:
+# #       - 'myproject/**'
+# #       - '.github/workflows/webapp_continuous_integration.yaml'
+# #   workflow_call:  # Make the workflow reusable
+# # jobs:
+# #   build:
+# #     runs-on: ubuntu-latest
 
-      - name: Set DJANGO_SETTINGS_MODULE
-        run: echo "DJANGO_SETTINGS_MODULE=myproject.settings" >> $GITHUB_ENV
+# #     env:
+# #           DJANGO_SETTINGS_MODULE: myproject.settings
 
-      - name: Set environment variable
-        # env:
-        #   APPLICATIONINSIGHTS_CONNECTION_STRING: ${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
-        run: |
-          source myenv/bin/activate
-          python myproject/manage.py test 
+# #     steps:
+# #       - name: Checkout code
+# #         uses: actions/checkout@v2
+
+# #       - name: Cache dependency
+# #         uses: actions/cache@v2
+# #         with:
+# #           path: ~/.cache/pip
+# #           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+# #           restore-keys: |
+# #             ${{ runner.os }}-pip-
+
+# #       - name: Set up Python
+# #         uses: actions/setup-python@v2
+# #         with:
+# #           python-version: '3.10'
+
+# #       - name: Install dependencies
+# #         run: |
+# #           python -m venv myenv
+# #           source myenv/bin/activate
+# #           pip install -r myproject/requirements.txt
+
+# #       - name: Set DJANGO_SETTINGS_MODULE
+# #         run: echo "DJANGO_SETTINGS_MODULE=myproject.settings" >> $GITHUB_ENV
+
+# #       - name: Set environment variable
+# #         # env:
+# #         #   APPLICATIONINSIGHTS_CONNECTION_STRING: ${{ secrets.APPLICATIONINSIGHTS_CONNECTION_STRING }}
+# #         run: |
+# #           source myenv/bin/activate
+# #           python myproject/manage.py test 
+
+
+
+
+
+    # name of our workflow
+    name: CI Pipeline
+
+    # triggers for our workflow
+    on:
+        push:
+            branches:
+                - 'test-traces/**'
+                - 'develop'
+                - 'main' # to remove after testing
+            paths:
+                - 'myproject/**'
+                - '.github/workflows/webapp_continuous_deployment.yaml'
+        pull_request:
+            types: [opened, synchronize, reopened]
+            branches:
+                - develop
+        workflow_call:
+
+    #  jobs definition
+    jobs:
+        health-check-job: # health check job for testing and code formatting check
+        
+            runs-on: ubuntu-latest # os for running the job
+            
+            steps:
+                - name: Checkout code # checking our the code at current commit that triggers the workflow
+                  uses: actions/checkout@v2
+    
+                - name: Cache dependency # caching dependency will make our build faster.
+                  uses: actions/cache@v2 # for more info checkout pip section documentation at https://github.com/actions/cache
+                  with:
+                        path: ~/.cache/pip
+                        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+                        restore-keys: |
+                            ${{ runner.os }}-pip-
+    
+                - name: Setup python environment # setting python environment to 3.x
+                  uses: actions/setup-python@v2
+                  with:
+                    python-version: '3.10' # if you want multiple python version run just use matrix strategy in job config. See the documentation of GitHub Actions
+            
+                - name: Check Python version # checking the python version to see if 3.x is installed.
+                  run: python --version
+    
+                - name: Install requirements # install application requirements
+                  run: pip install -r myproject/requirements.txt
+                
+                - name: Install Bandit
+                  run: pip install bandit
+
+                - name: Run Security Check
+                  run: bandit -r api
+                  continue-on-error: true
+
+                - name: Check Syntax # check code formatting
+                  run: pycodestyle --statistics --ignore=E501,E712 app_web
+                  continue-on-error: true
+                    
+                - name: Collect Statics # run migrations to create table in side car db container
+                  run: python myproject/manage.py collectstatic --noinput
+
+                - name: Run Test and Coverage # running tests
+                #   working-directory: ./api
+                  run: pytest myproject --cov-fail-under=80 -vv
+
+
+
+
