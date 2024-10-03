@@ -45,6 +45,9 @@ WORKDIR /app
 # Copy the requirements file into the container at /app
 COPY myproject/requirements.txt /app/
 
+# Copy the current directory contents into the container at /app
+COPY . /app
+
 # Copy .env file into the container
 # COPY .env /app/.env
 

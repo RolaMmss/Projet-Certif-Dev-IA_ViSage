@@ -225,7 +225,7 @@ jobs:
     #               run: pip install bandit
 
     #             - name: Run Security Check
-    #               run: bandit -r api
+    #               run: bandit -r my_project
     #               continue-on-error: true
 
     #             - name: Check Syntax # check code formatting
