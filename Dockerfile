@@ -1,44 +1,48 @@
-# # Use an official Python runtime as a parent image
+# Use an official Python runtime as a parent image
+FROM python:3.10-slim
 # FROM python:3.10-slim
-# # FROM python:3.10-slim
 
-# # Set environment variables
-# ENV PYTHONDONTWRITEBYTECODE 1
-# ENV PYTHONUNBUFFERED 1
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-# # Set work directory
-# WORKDIR /app
+# Set work directory
+WORKDIR /app
 
-# # Install system dependencies
-# RUN apt-get update \
-#     && apt-get install -y --no-install-recommends gcc \
-#     && rm -rf /var/lib/apt/lists/*
+# Install system dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gcc \
+    && rm -rf /var/lib/apt/lists/*
 
-# # Install Python dependencies
-# COPY myproject/requirements.txt /app/
-
+# Install Python dependencies
+COPY myproject/requirements.txt /app/
+# Copy .env file into the container
+COPY myproject/.env /app/.env
 # # Install any needed packages specified in requirements.txt
 # RUN pip install --no-cache-dir --upgrade pip \
 #     && pip install --no-cache-dir -r myproject/requirements.txt
 
-# # Copy your Django project into the container
-# # COPY . /app/
-# COPY myproject /app/myproject
+RUN python -m pip install --no-cache-dir --upgrade  -r /app/requirements.txt 
 
-# # Copy .env file into the container
-# #  COPY .env /app/.env
 
-# # Collect static files (if necessary)
-# # RUN python manage.py collectstatic --noinput
+# Copy your Django project into the container
+# COPY . /app/
+COPY myproject /app/myproject
 
-# # Set the PYTHONPATH to include the nested myproject
-# ENV PYTHONPATH /app/myproject
+# Copy .env file into the container
+#  COPY .env /app/.env
 
-# # Make port 8000 available to the world outside this container
-# EXPOSE 8000
+# Collect static files (if necessary)
+# RUN python manage.py collectstatic --noinput
 
-# # Existing CMD line in your Dockerfile
-# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
+# Set the PYTHONPATH to include the nested myproject
+ENV PYTHONPATH /app/myproject
+
+# Make port 8000 available to the world outside this container
+EXPOSE 8000
+
+# Existing CMD line in your Dockerfile
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
 
 
 
