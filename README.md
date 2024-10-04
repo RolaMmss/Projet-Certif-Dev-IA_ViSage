@@ -82,3 +82,4 @@ and save it in .env (for local) and GitHub secrets (for deployed)
 5. Verify the data in Azure Application Insights
 
 bismillah alrahman alrahim
+alrahmaaaaaaaaaaaa
