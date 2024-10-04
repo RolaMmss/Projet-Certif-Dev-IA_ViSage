@@ -55,7 +55,7 @@ az login
 az container create \
     --resource-group $RESSOURCE_GROUP \
     --name containerinstancewebapp \
-    --image $DOCKERHUB_USERNAME/repo_webapp:latest \
+    --image $DOCKERHUB_USERNAME/imagewebapp:latest \   
     --cpu 1 \
     --memory 1 \
     --ip-address public \

@@ -20,7 +20,7 @@ pytest tests/test_views.py
         ( in case it didn't find api, this will lead to the correct path) -->
 
 # Launch the web app
-python manage.py runserver
+python manage.py runserver --noreload
 
 ## Deploy the Web App
 - Build and test the Docker Image locally: 
@@ -40,16 +40,17 @@ docker run -p 8000:8000 -e "APPLICATIONINSIGHTS_CONNECTION_STRING=Instrumentatio
 
 - Tag the image before pushing it to dockerhub
         - docker login
-        - docker tag imageweb rola123/imageweb:latest
-        - docker push rola123/imageweb:latest
+        - docker tag imagewebapp rola123/imagewebapp:latest
+        - docker push rola123/imagewebapp:latest
 
 # Create Azure Container Instance
 Execute create_ACI.sh in the terminal as follows:
     cd to the directory root next to api,model, .env, etc...
     chmod +x scripts/create_ACI.sh
     ./scripts/create_ACI.sh
-
+# Go to Azure container instance, check the existance of the deployed app the type the followint in browser to lauch the App:
  http://myapp-container.francecentral.azurecontainer.io:8000/
+ 
    # superuser:  
    username : Rola
    

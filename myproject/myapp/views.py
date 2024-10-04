@@ -146,7 +146,7 @@ def api(request):
                         api_span.add_event("API Request Failure", attributes={"error": str(e)})
                         return render(
                             request, 
-                            'myapp/error_page.html', 
+                            'myapp/login.html', 
                             context={'form': form, 'error_message': 'Failed to retrieve predictions from the API.'}
                         )
                     
@@ -174,7 +174,7 @@ def api(request):
                         db_span.add_event("DB Save Failure", attributes={"error": str(db_error)})
                         return render(
                             request, 
-                            'myapp/error_page.html', 
+                            'myapp/login.html', 
                             context={'form': form, 'error_message': 'Failed to save prediction to the database.'}
                         )
                     
