@@ -8,8 +8,10 @@ Develop a web app that integrates an artificial intelligence model, monitor this
 python -m venv myenv
 source myenv/bin/activate
 
-# Install all dependencies
-pip install -r requirements.txt
+# Install all dependencies    
+- pip freeze > requirements.txt    ---> captures the current state of installed packages and their specific versions in a virtual environment
+
+- pip install -r requirements.txt  ---> install packages in requirements.txt
 
 # Run the pytests : 
 
