@@ -37,18 +37,6 @@ ENV PYTHONPATH /app/myproject
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
 
-# Run Gunicorn (production)
-# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
-
-# Run Django's development server (useful for local development or debugging)
-# CMD ["python3", "/app/myproject/manage.py", "runserver", "0.0.0.0:8000"]
-
-# Check Gunicorn Logs
-# CMD ["gunicorn", "--workers=4", "--bind", "0.0.0.0:8000", "--log-level", "debug", "myproject.wsgi:application"]
-
-# Run Gunicorn (production)
-# CMD ["gunicorn", "--workers=4", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
-
 # Existing CMD line in your Dockerfile
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
 
