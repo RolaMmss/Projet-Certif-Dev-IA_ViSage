@@ -74,5 +74,3 @@
 
 # # Check Gunicorn Logs
 # CMD ["gunicorn", "--workers=4", "--bind", "0.0.0.0:8000", "--log-level", "debug", "myproject.wsgi:application"]
-
-
