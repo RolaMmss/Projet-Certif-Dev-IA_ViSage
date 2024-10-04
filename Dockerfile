@@ -63,7 +63,7 @@ ENV DJANGO_SETTINGS_MODULE=myproject.settings
 # Update this to your actual settings path
 
 # Make port 8000 available to the world outside this container
-EXPOSE 8002
+EXPOSE 8000
 
 # Run the application with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8002", "myproject.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
