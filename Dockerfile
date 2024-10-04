@@ -26,7 +26,7 @@ RUN pip install --no-cache-dir --upgrade pip \
 COPY myproject /app/myproject
 
 # Copy .env file into the container
- COPY .env /app/.env
+#  COPY .env /app/.env
 
 # Collect static files (if necessary)
 # RUN python manage.py collectstatic --noinput
