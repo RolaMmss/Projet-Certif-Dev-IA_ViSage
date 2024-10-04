@@ -328,7 +328,7 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-
+     # To find the path for dockerfile
     - name: List files in the root directory
       run: ls -la ./  # Debugging step to check if Dockerfile is present
 
