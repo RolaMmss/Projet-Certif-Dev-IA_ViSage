@@ -70,5 +70,5 @@ ENV DJANGO_SETTINGS_MODULE=myproject.settings
 EXPOSE 8000
 
 # Run the application with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application", "--log-level", "debug"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
 # CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application", "--log-level", "info", "--access-logfile", "/var/log/gunicorn/access.log", "--error-logfile", "/var/log/gunicorn/error.log"]
