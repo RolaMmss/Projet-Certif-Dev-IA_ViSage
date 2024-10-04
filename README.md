@@ -5,7 +5,7 @@ Develop a web app that integrates an artificial intelligence model, monitor this
 
 
 # Create and activate a virtual environment
-python3 -m venv myenv
+python -m venv myenv
 source myenv/bin/activate
 
 # Install all dependencies
@@ -20,7 +20,7 @@ pytest tests/test_views.py
         ( in case it didn't find api, this will lead to the correct path) -->
 
 # Launch the web app
-python3 manage.py runserver
+python manage.py runserver
 
 ## Deploy the Web App
 - Build and test the Docker Image locally: 

@@ -206,3 +206,20 @@ if MONITORING == 'True':
 #         },
 #     },
 # }
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',  # Use 'ERROR' or 'DEBUG' based on your needs
+        },
+    },
+}
