@@ -119,7 +119,7 @@ on:
     branches:
         - main
         - develop
-        # - test-traces
+        - test-traces
     paths:
       - 'myproject/**'
       - '.github/workflows/webapp_continuous_integration.yaml'
