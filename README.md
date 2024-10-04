@@ -24,12 +24,13 @@ python manage.py runserver --noreload
 
 ## Deploy the Web App
 - Build and test the Docker Image locally: 
-        - docker build -t imagewebapp:latest -f Dockerfile . 
-        <!-- - docker build -t imagewebapp:latest -f myproject/Dockerfile myproject -->
-        - docker run -p 8000:8000 imagewebapp:latest
+        docker build -t imagewebapp:latest -f Dockerfile . 
+        docker run -p 8000:8000 imagewebapp:latest
 
         - then /docs
-        Remark: Each time you build a new image, you have to go to Docker extension in vscode to delete the existant containers.
+        Remark: Each time you build a new image, you have to go to Docker extension in vscode to delete the existant containers:
+        docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)
+        
 - Test docker run with environment variables locally:
 docker run -p 8000:8000 \
     -e CLIENT_ID=WGY8DrcNMzq6vr4JYFoGioeB \
