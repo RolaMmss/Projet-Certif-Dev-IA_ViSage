@@ -379,8 +379,6 @@ jobs:
     - name: Test Endpoint
       run: curl -I containerinstancewebapp.francecentral.azurecontainer.io:8000/
 
-
-
        # --environment-variables \
             # "TOKEN"=${{ secrets.TOKEN }} \
             # "APP_NAME"=containerinstancewebapp \
