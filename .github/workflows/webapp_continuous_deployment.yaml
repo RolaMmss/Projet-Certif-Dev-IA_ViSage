@@ -82,8 +82,10 @@ name: Continuous deployment workflow.
 
 on:
   push:
-    # branches:
-    #   - main 
+    branches:
+      - main 
+      - develop
+      - test-traces
     paths:
       - 'myproject/**'
       - '.github/workflows/webapp_continuous_deployment.yaml'
