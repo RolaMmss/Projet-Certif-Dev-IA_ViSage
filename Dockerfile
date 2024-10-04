@@ -49,7 +49,7 @@ COPY myproject/requirements.txt /app/
 # COPY . /app
 
 # Copy .env file into the container
-COPY .env /app/.env
+# COPY .env /app/.env
 
 # Install any needed packages specified in requirements.txt
 RUN python3 -m pip install --no-cache-dir --upgrade -r /app/requirements.txt 
@@ -67,4 +67,5 @@ ENV DJANGO_SETTINGS_MODULE=myproject.settings
 EXPOSE 8000
 
 # Run the application with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
+# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application", "--log-level", "debug"]
