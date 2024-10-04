@@ -116,6 +116,9 @@ name: CI Pipeline
 
 on:
   push:
+    # branches:
+    #     - main
+    #     - develop
     paths:
       - 'myproject/**'
       - '.github/workflows/webapp_continuous_integration.yaml'
