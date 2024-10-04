@@ -59,6 +59,7 @@ COPY myproject /app/myproject
 
 # Set environment variables
 ENV PYTHONPATH=/app/myproject
+
 ENV DJANGO_SETTINGS_MODULE=myproject.settings  
 # Update this to your actual settings path
 
