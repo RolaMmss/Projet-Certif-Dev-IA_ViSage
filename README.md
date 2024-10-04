@@ -76,5 +76,3 @@ and save it in .env (for local) and GitHub secrets (for deployed)
 4. Add metrics and traces (views.py)
 
 5. Verify the data in Azure Application Insights
-
-Test test test
