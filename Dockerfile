@@ -110,7 +110,11 @@ COPY . /app/
 RUN python manage.py collectstatic --noinput
 
 # Run Gunicorn
-CMD ["gunicorn", "--workers=4", "--bind", "0.0.0.0:8546", "myproject.wsgi:application"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8546", "myproject.wsgi:application"]
+
+
+
+
 
 # Delete local docker containers
 # Add User to Docker Group
