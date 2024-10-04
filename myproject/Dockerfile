@@ -95,11 +95,11 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY myproject/requirements.txt /app/
+COPY requirements.txt /app/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r myproject/requirements.txt
+    && pip install --no-cache-dir -r requirements.txt
 
 # Copy your Django project into the container
 # COPY . /app/
