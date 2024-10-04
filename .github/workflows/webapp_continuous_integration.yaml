@@ -116,9 +116,10 @@ name: CI Pipeline
 
 on:
   push:
-    # branches:
-    #     - main
-    #     - develop
+    branches:
+        - main
+        - develop
+        # - test-traces
     paths:
       - 'myproject/**'
       - '.github/workflows/webapp_continuous_integration.yaml'
