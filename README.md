@@ -59,6 +59,11 @@ Execute create_ACI.sh in the terminal as follows:
    
    password : passwordrola
 
+# CI/CD
+- GitHub Actions workflows are set up to trigger on pushes to the main, develop, and test-traces branches and for changes in the myproject/** directory or .github/workflows/ files. 
+
+- If you want the workflow to trigger on every push regardless of which files were changed, remove the paths filter.
+
 # Monitoring
 ## Intégration de OpenTelemetry et Azure Application Insights
 
