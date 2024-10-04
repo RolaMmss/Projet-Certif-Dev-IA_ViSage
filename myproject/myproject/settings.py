@@ -208,18 +208,25 @@ if MONITORING == 'True':
 # }
 
 
+# Get the absolute path for the log file
+LOG_FILE_PATH = os.path.join(BASE_DIR, 'django_error.log')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': LOG_FILE_PATH,
         },
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
-            'level': 'DEBUG',  # Use 'ERROR' or 'DEBUG' based on your needs
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
         },
     },
 }
+

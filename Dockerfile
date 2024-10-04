@@ -99,22 +99,42 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-COPY requirements.txt /app/
+COPY myproject/requirements.txt /app/
+
+# Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+    && pip install --no-cache-dir -r myproject/requirements.txt
 
 # Copy your Django project into the container
-COPY . /app/
+# COPY . /app/
+COPY myproject /app/myproject
+
+# Copy .env file into the container
+ COPY .env /app/.env
 
 # Collect static files (if necessary)
-RUN python manage.py collectstatic --noinput
+# RUN python manage.py collectstatic --noinput
+
+# Set the PYTHONPATH to include the nested myproject
+ENV PYTHONPATH /app/myproject
 
 # Make port 8000 available to the world outside this container
 EXPOSE 8000
 
-# Run Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
+# Run Gunicorn (production)
+# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
 
+# Run Django's development server (useful for local development or debugging)
+# CMD ["python3", "/app/myproject/manage.py", "runserver", "0.0.0.0:8000"]
+
+# Check Gunicorn Logs
+# CMD ["gunicorn", "--workers=4", "--bind", "0.0.0.0:8000", "--log-level", "debug", "myproject.wsgi:application"]
+
+# Run Gunicorn (production)
+# CMD ["gunicorn", "--workers=4", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
+
+# Existing CMD line in your Dockerfile
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "myproject.wsgi:application"]
 
 
 
