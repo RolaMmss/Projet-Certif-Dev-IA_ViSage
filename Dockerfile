@@ -49,7 +49,7 @@ COPY myproject/requirements.txt /app/
 # COPY . /app
 
 # Copy .env file into the container
-# COPY .env /app/.env
+COPY .env /app/.env
 
 # Install any needed packages specified in requirements.txt
 RUN python3 -m pip install --no-cache-dir --upgrade -r /app/requirements.txt 
