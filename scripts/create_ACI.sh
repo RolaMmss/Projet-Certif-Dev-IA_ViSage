@@ -55,13 +55,14 @@ az login
 az container create \
     --resource-group $RESSOURCE_GROUP \
     --name containerinstancewebapp \
-    --image $DOCKERHUB_USERNAME/imagewebapp:latest \   
+    --image $DOCKERHUB_USERNAME/imagewebapp:latest \
     --cpu 1 \
     --memory 1 \
     --ip-address public \
     --ports 80 8000 \
     --registry-username $DOCKERHUB_USERNAME \
-    --registry-password $DOCKERHUB_PASSWORD
+    --registry-password $DOCKERHUB_PASSWORD \
+    
 
 # Run it: chmod +x scripts/create_ACI.sh
 # Execute it : ./scripts/create_ACI.sh

@@ -370,12 +370,14 @@ jobs:
             --ip-address public \
             --dns-name-label containerinstancewebapp \
             --ports 8000 \
-            --environment-variables \
-            "TOKEN"=${{ secrets.TOKEN }} \
-            "APP_NAME"=containerinstancewebapp \
-            "DATABASE_URL"=${{ secrets.DATABASE_URL }} \
-            "SECRET_KEY"=${{ secrets.SECRET_KEY }} \
-            "DEBUG"="True"
 
     - name: Test Endpoint
       run: curl -I containerinstancewebapp.francecentral.azurecontainer.io:8000/
+
+
+       # --environment-variables \
+            # "TOKEN"=${{ secrets.TOKEN }} \
+            # "APP_NAME"=containerinstancewebapp \
+            # "DATABASE_URL"=${{ secrets.DATABASE_URL }} \
+            # "SECRET_KEY"=${{ secrets.SECRET_KEY }} \
+            # "DEBUG"="True"
